@@ -4,71 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lojain — a small galaxy</title>
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- floating hearts / stars background -->
-  <div id="bg-layer">
-    <div class="stars"></div>
-  </div>
+  <style>
+    :root{
+      --bg:#0b0c1a; --ink:#fff; --muted:#cfd0ffb3;
+      --accent:#ff3d86; --accent2:#8B0B7A;
+      --glass: rgba(255,255,255,.06); --glass-border: rgba(255,255,255,.12);
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{
+      margin:0; color:var(--ink); font-family:Inter,system-ui,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 600px at 70% 20%, #1a1740 0%, transparent 60%),
+        radial-gradient(900px 500px at 20% 80%, #0b1d3a 0%, transparent 55%),
+        var(--bg);
+      overflow-x:hidden;
+    }
+    /* stars */
+    .stars{position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.9;
+      background:
+       radial-gradient(2px 2px at 20% 30%, #fff, transparent 60%),
+       radial-gradient(1.5px 1.5px at 60% 70%, #d8d8ff, transparent 60%),
+       radial-gradient(1.8px 1.8px at 80% 20%, #fff, transparent 60%),
+       radial-gradient(1.2px 1.2px at 30% 80%, #cfcfff, transparent 60%),
+       radial-gradient(1.3px 1.3px at 50% 50%, #fefefe, transparent 60%);
+      animation: twinkle 6s infinite ease-in-out;
+    }
+    @keyframes twinkle{0%,100%{opacity:.9}50%{opacity:.7}}
 
-  <main class="wrap">
-    <article class="card glass">
-      <header class="head">
-        <h1 class="title">Lojain <span class="heart">❤️</span></h1>
-        <p class="mini">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
-      </header>
-
-      <section class="bigline breathe">
-        Take your time. I’ll wait. I’m not going anywhere.
-      </section>
-
-      <div class="dots" aria-hidden="true">
-        <span class="on"></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-      <div class="row center">
-        <button class="pill" id="loveBtn">A small touch of love</button>
-      </div>
-
-      <section class="panel">
-        <h3>Read this slowly whenever you need it</h3>
-        <ul>
-          <li>You’re not alone. I’m with you — now and always.</li>
-          <li>Whatever happened, we’ll face it together. One step at a time.</li>
-          <li>You are loved, you are safe, and your feelings matter to me.</li>
-          <li>Text me when you’re ready. Or just read this and breathe — I’m here.</li>
-        </ul>
-
-        <!-- breathing circle -->
-        <div class="breath-wrap">
-          <div class="breath-circle" id="breathCircle"></div>
-          <p class="hint" id="breathHint">Inhale 4 · Hold 4 · Exhale 6 — repeat</p>
-        </div>
-      </section>
-
-      <footer class="foot">
-        <small>Made with care — A23</small>
-      </footer>
-    </article>
-  </main>
-
-  <!-- bottom widgets (new ideas) -->
-  <div class="since glass small">
-    <span>Since we met:</span>
-    <strong id="sinceCounter">—</strong>
-  </div>
-
-  <div class="notebook glass small">
-    <textarea id="guestNote" placeholder="Write anything you want…"></textarea>
-    <button id="saveNote" class="pill sm">Save</button>
-    <small class="muted">Saved only on this device</small>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+    /* layout */
+    .wrap{position:relative; z-index:1; min-height:100svh; display:grid; place-items:center; padding:24px}
+    .glass{background:var(--glass); border:1px solid var(--glass-border); backdrop-filter: blur(8px)}
+    .card{width:min(860px,90vw); padding:28px 28px 18px; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .head{display:grid
