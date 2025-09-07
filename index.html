@@ -2,15 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lojain ✨</title>
-  <!-- ربط ملف التنسيقات -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lojain — a small galaxy</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="section">
-    <h1 id="heroName" class="title">Lojain</h1>
-    <p class="subtitle">I’m always with you 💜</p>
+  <!-- floating hearts / stars background -->
+  <div id="bg-layer">
+    <div class="stars"></div>
+  </div>
+
+  <main class="wrap">
+    <article class="card glass">
+      <header class="head">
+        <h1 class="title">Lojain <span class="heart">❤️</span></h1>
+        <p class="mini">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
+      </header>
+
+      <section class="bigline breathe">
+        Take your time. I’ll wait. I’m not going anywhere.
+      </section>
+
+      <div class="dots" aria-hidden="true">
+        <span class="on"></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="row center">
+        <button class="pill" id="loveBtn">A small touch of love</button>
+      </div>
+
+      <section class="panel">
+        <h3>Read this slowly whenever you need it</h3>
+        <ul>
+          <li>You’re not alone. I’m with you — now and always.</li>
+          <li>Whatever happened, we’ll face it together. One step at a time.</li>
+          <li>You are loved, you are safe, and your feelings matter to me.</li>
+          <li>Text me when you’re ready. Or just read this and breathe — I’m here.</li>
+        </ul>
+
+        <!-- breathing circle -->
+        <div class="breath-wrap">
+          <div class="breath-circle" id="breathCircle"></div>
+          <p class="hint" id="breathHint">Inhale 4 · Hold 4 · Exhale 6 — repeat</p>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <small>Made with care — A23</small>
+      </footer>
+    </article>
   </main>
+
+  <!-- bottom widgets (new ideas) -->
+  <div class="since glass small">
+    <span>Since we met:</span>
+    <strong id="sinceCounter">—</strong>
+  </div>
+
+  <div class="notebook glass small">
+    <textarea id="guestNote" placeholder="Write anything you want…"></textarea>
+    <button id="saveNote" class="pill sm">Save</button>
+    <small class="muted">Saved only on this device</small>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
