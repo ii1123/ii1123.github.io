@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Galaxy for Lujain ✨</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#8B0B7A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Galaxy for Lujain">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+    <section class="hero section" id="top">
+      <div class="content">
+        <h1 id="heroName" class="title">Lujain</h1>
+        <p class="subtitle">I’m always with you 💜</p>
+        <div class="qr-card">
+          <img id="qrImg" src="" alt="QR code" />
+          <p class="qr-caption">Open your surprise</p>
+        </div>
+        <a href="#about" class="scroll-down">▼</a>
+      </div>
+
+      <!-- bottom widgets -->
+      <div class="since">
+        <span>Since we met:</span>
+        <strong id="sinceCounter">—</strong>
+      </div>
+
+      <div class="notebook">
+        <textarea id="guestNote" placeholder="Write whatever you want here…"></textarea>
+        <button id="saveNote">Save</button>
+      </div>
+    </section>
+
+    <section class="about section" id="about">
+      <h2>About Us</h2>
+      <div class="cards">
+        <div class="card">My favorite star in December’s sky…</div>
+        <div class="card">The silence between us is sweeter than words…</div>
+        <div class="card">Every day brings a new space for joy…</div>
+      </div>
+
+      <button id="readyBtn" class="ready-btn">
+        If you’re okay and ready — press here ❤️
+      </button>
+
+      <div id="heartRain"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
