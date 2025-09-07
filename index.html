@@ -36,4 +36,133 @@
     .wrap{position:relative; z-index:1; min-height:100svh; display:grid; place-items:center; padding:24px}
     .glass{background:var(--glass); border:1px solid var(--glass-border); backdrop-filter: blur(8px)}
     .card{width:min(860px,90vw); padding:28px 28px 18px; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.35)}
-    .head{display:grid
+    .head{display:grid; gap:8px; text-align:center}
+    .title{margin:0; font-size:28px; font-weight:800; letter-spacing:.3px}
+    .mini{margin:0; color:var(--muted); font-size:14px}
+    .bigline{text-align:center; margin:18px auto 8px; font-weight:800; font-size:clamp(18px,3.4vw,28px)}
+    .breathe{animation: breathe 6.5s ease-in-out infinite}
+    @keyframes breathe{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.03);opacity:1}}
+    .pill{border:none; background:var(--accent2); color:#fff; padding:10px 16px; border-radius:999px; cursor:pointer}
+    .row.center{display:flex; justify-content:center}
+    .panel{margin-top:14px; padding:16px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--glass-border)}
+    .panel h3{margin:0 0 8px; font-size:16px}
+    .panel ul{margin:0 0 14px 0; padding-left:18px; color:var(--muted); line-height:1.7}
+    .panel li{margin:4px 0}
+    .breath-wrap{display:grid; place-items:center; gap:8px; margin:12px 0 2px}
+    .breath-circle{width:68px; height:68px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #ff8cab, #ff3d86);
+      box-shadow:0 0 40px rgba(255,61,134,.35);
+      animation: inhale 4s ease-in-out infinite;
+    }
+    @keyframes inhale{0%{transform:scale(0.9)}25%{transform:scale(1.08)}50%{transform:scale(1.12)}80%{transform:scale(0.86)}100%{transform:scale(0.9)}}
+    .hint{margin:0; color:var(--muted); font-size:12px; text-align:center}
+    .foot{margin-top:10px; text-align:center; color:var(--muted); font-size:12px}
+    .heart{display:inline-block; animation:pulse 2.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+    /* bottom widgets */
+    .since{position:fixed; right:12px; bottom:12px; display:flex; gap:6px; align-items:baseline; font-size:13px; z-index:2}
+    .notebook{position:fixed; left:12px; bottom:12px; display:grid; gap:6px; width:min(45vw,260px); z-index:2}
+    .notebook textarea{width:100%; min-height:78px; resize:vertical; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-border); background:rgba(255,255,255,.08); color:#fff; outline:none}
+    .muted{color:var(--muted); font-size:11px}
+
+    /* hearts */
+    .heart-float{position:fixed; z-index:0; pointer-events:none; filter:drop-shadow(0 2px 6px rgba(255,0,120,.5)); animation: fall 9s linear forwards}
+    @keyframes fall{0%{transform:translateY(-40px) translateX(0) rotate(0); opacity:.9}100%{transform:translateY(110vh) translateX(var(--d, 60px)) rotate(40deg); opacity:0}}
+    @media (max-width:520px){ .card{padding:22px 18px} .bigline{font-size:18px} }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <main class="wrap">
+    <article class="card glass">
+      <header class="head">
+        <h1 class="title">Lojain <span class="heart">❤️</span></h1>
+        <p class="mini">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
+      </header>
+
+      <section class="bigline breathe">
+        Take your time. I’ll wait. I’m not going anywhere.
+      </section>
+
+      <div class="row center">
+        <button class="pill" id="loveBtn">A small touch of love</button>
+      </div>
+
+      <section class="panel">
+        <h3>Read this slowly whenever you need it</h3>
+        <ul>
+          <li>You’re not alone. I’m with you — now and always.</li>
+          <li>Whatever happened, we’ll face it together. One step at a time.</li>
+          <li>You are loved, you are safe, and your feelings matter to me.</li>
+          <li>Text me when you’re ready. Or just read this and breathe — I’m here.</li>
+        </ul>
+        <div class="breath-wrap">
+          <div class="breath-circle" id="breathCircle"></div>
+          <p class="hint" id="breathHint">Inhale 4 · Hold 4 · Exhale 6 — repeat</p>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <small>Made with care — A23</small>
+      </footer>
+    </article>
+  </main>
+
+  <!-- bottom widgets -->
+  <div class="since glass small"><span>Since we met:</span> <strong id="sinceCounter">—</strong></div>
+  <div class="notebook glass small">
+    <textarea id="guestNote" placeholder="Write anything you want…"></textarea>
+    <button id="saveNote" class="pill" style="padding:6px 10px; font-size:12px">Save</button>
+    <small class="muted">Saved only on this device</small>
+  </div>
+
+  <script>
+    // settings
+    const MEET_DATE_ISO = '2025-03-21T00:00:00'; // Friday, March 21, 2025
+
+    // since counter
+    function updateSince(){
+      const el = document.getElementById('sinceCounter');
+      if(!el) return;
+      const start = new Date(MEET_DATE_ISO).getTime();
+      const diff = Math.max(0, Date.now() - start);
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor((diff/3600000)%24);
+      const m = Math.floor((diff/60000)%60);
+      el.textContent = `${d} days, ${h} hrs, ${m} mins`;
+    }
+    updateSince(); setInterval(updateSince, 30000);
+
+    // notebook
+    const noteKey='note_lo';
+    const note=document.getElementById('guestNote');
+    const saveBtn=document.getElementById('saveNote');
+    if(note && saveBtn){
+      try{ note.value = localStorage.getItem(noteKey) || '' }catch{}
+      saveBtn.addEventListener('click', ()=>{
+        try{ localStorage.setItem(noteKey, note.value); saveBtn.textContent='Saved ✓'; setTimeout(()=>saveBtn.textContent='Save',1000) }catch{ alert('Couldn’t save locally.') }
+      });
+    }
+
+    // hearts background
+    function spawnHeart(){
+      const h=document.createElement('div'); h.textContent='💖'; h.className='heart-float';
+      h.style.left=Math.random()*100+'vw'; h.style.top='-30px';
+      h.style.fontSize=(16+Math.random()*18)+'px'; h.style.setProperty('--d',(Math.random()*120-60)+'px');
+      document.body.appendChild(h); setTimeout(()=>h.remove(), 9500);
+    }
+    for(let i=0;i<18;i++) setTimeout(spawnHeart, i*300);
+    setInterval(spawnHeart, 1200);
+
+    // love button burst
+    document.getElementById('loveBtn').addEventListener('click', ()=>{ for(let i=0;i<40;i++) setTimeout(spawnHeart, i*30) });
+
+    // breathing tips
+    const tips=['Inhale 4 · Hold 4 · Exhale 6 — repeat','Square: Inhale 4 · Hold 4 · Exhale 4 · Hold 4','4–7–8: Inhale 4 · Hold 7 · Exhale 8'];
+    let ti=0; const hint=document.getElementById('breathHint');
+    setInterval(()=>{ ti=(ti+1)%tips.length; hint.textContent=tips[ti] }, 7000);
+  </script>
+</body>
+</html>
