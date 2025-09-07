@@ -1,162 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lojain — a small galaxy</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Courgette&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: radial-gradient(1000px at 70% 20%, #1a1740 0%, transparent 70%),
-                  radial-gradient(800px at 20% 80%, #0b1d3a 0%, transparent 60%),
-                  #0b0c1a;
-      color: #fff;
-      overflow-x: hidden;
-    }
-    .wrap { display: grid; place-items: center; min-height: 100vh; padding: 24px; }
-    .card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 800px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,.4);
-    }
-    .title { font-size: 28px; font-weight: 800; margin: 0; }
-    .mini { font-size: 14px; opacity: 0.8; margin-top: 6px; }
-    .bigline { margin: 20px 0; font-size: 22px; font-weight: bold; }
-    .pill {
-      border: none;
-      background: #8B0B7A;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-    }
-    .panel { margin-top: 20px; text-align: left; font-size: 14px; opacity: 0.9; }
-    .panel ul { padding-left: 20px; }
-    .breath-circle {
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ff8cab, #ff3d86);
-      box-shadow: 0 0 30px rgba(255,61,134,.4);
-      margin: 20px auto;
-    }
-    footer { margin-top: 16px; font-size: 12px; opacity: 0.7; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lujain — A23</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg1: #0f1020; --bg2: #1b1e3a; --accent: #ff4d6d; --text: #f7f7ff; --muted: #cfd3ff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%; margin: 0; font-family: 'Tajawal', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background:
+      radial-gradient(1200px circle at 20% 10%, rgba(255,77,109,0.07), transparent 40%),
+      radial-gradient(1000px circle at 90% 80%, rgba(207,211,255,0.08), transparent 45%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    color: var(--text); overflow-x: hidden; overflow-y: auto;
+  }
+  .stars, .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .star { position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 50%; opacity: 0; animation: twinkle 6s linear infinite; }
+  @keyframes twinkle { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 50% { opacity: 0.6; } 100% { transform: translateY(40px); opacity: 0; } }
+  .heart { position: absolute; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); border-radius: 2px; opacity: 0.8; animation: float 10s linear infinite; }
+  .heart::before, .heart::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; }
+  .heart::before { top: -6px; left: 0; } .heart::after  { left: -6px; top: 0; }
+  @keyframes float { 0% { transform: translateY(0) rotate(45deg) scale(1); opacity: 0.0; } 10% { opacity: 0.7; } 50% { transform: translateY(-55vh) rotate(45deg) scale(1.15); } 100% { transform: translateY(-110vh) rotate(45deg) scale(1.3); opacity: 0; } }
 
-    /* since counter */
-    .since {
-      position: fixed; right: 12px; bottom: 12px;
-      background: rgba(255,255,255,.08);
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      backdrop-filter: blur(6px);
-    }
+  .wrap { position: relative; z-index: 3; min-height: 100%; display: grid; place-items: center; padding: 24px; text-align: center; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.35); border-radius: 20px; padding: 28px 22px; max-width: 760px; width: 100%; backdrop-filter: blur(10px); }
+  h1 { margin: 0 0 8px 0; font-size: 28px; letter-spacing: 0.5px; }
+  .subtitle { margin: 0 0 20px 0; font-size: 16px; color: var(--muted); }
+  .line { min-height: 112px; display: grid; place-items: center; font-size: 30px; font-weight: 700; line-height: 1.5; padding: 10px 4px; }
+  .line span { display: inline-block; opacity: 0; transform: translateY(12px) scale(0.98); filter: blur(6px); animation: in 1000ms ease forwards; }
+  @keyframes in { to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+  .dots { margin-top: 14px; display: flex; justify-content: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+  .dot.active { background: var(--accent); }
+  .cta { margin-top: 18px; display: inline-block; padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14); text-decoration: none; color: var(--text); font-weight: 700; transition: transform .15s ease, background .2s ease; }
+  .cta:active { transform: scale(0.98); }
+  .footer { margin-top: 14px; font-size: 14px; color: var(--muted); }
 
-    /* notebook as book */
-    .notebook {
-      position: fixed; left: 12px; bottom: 12px;
-      width: 240px; height: 140px;
-      background: #fdfaf3;
-      color: #333;
-      border: 2px solid #d3cbb8;
-      border-radius: 6px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.3);
-      padding: 10px;
-      font-family: 'Courgette', cursive;
-      display: flex; flex-direction: column;
-    }
-    .notebook textarea {
-      flex: 1;
-      resize: none;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-family: 'Courgette', cursive;
-      font-size: 14px;
-      color: #333;
-    }
-    .notebook button {
-      align-self: flex-end;
-      margin-top: 6px;
-      border: none;
-      padding: 6px 10px;
-      background: #8B0B7A;
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-  </style>
+  /* Support box */
+  .support { margin-top: 18px; text-align: left; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; }
+  .support h3 { margin: 0 0 8px; font-size: 18px; }
+  .support p { margin: 8px 0; color: var(--muted); }
+
+  /* Breathe coach */
+  .breathe { margin-top: 10px; display: grid; place-items: center; }
+  .circle { width: 120px; height: 120px; border-radius: 999px; border: 2px dashed rgba(255,255,255,0.35); display: grid; place-items: center; }
+  .circle-inner { width: 20px; height: 20px; border-radius: 999px; background: var(--accent); animation: breath 8s ease-in-out infinite; }
+  @keyframes breath { 0%{ transform: scale(1); } 40%{ transform: scale(2.8); } 60%{ transform: scale(2.8); } 100%{ transform: scale(1); } }
+  .breath-steps { font-size: 13px; color: var(--muted); margin-top: 8px; }
+</style>
 </head>
 <body>
-  <main class="wrap">
-    <article class="card">
-      <h1 class="title">Lojain ❤️</h1>
-      <p class="mini">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
-      <p class="bigline">Take your time. I’ll wait. I’m not going anywhere.</p>
+  <div class="stars" id="stars"></div>
+  <div class="hearts" id="hearts"></div>
 
-      <!-- زر النجوم بدل القلوب -->
-      <button class="pill" id="loveBtn">A little stardust ✨</button>
+  <div class="wrap">
+    <div class="card">
+      <h1>Lujain ❤️</h1>
+      <p class="subtitle">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
 
-      <section class="panel">
+      <div class="line" id="line"></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <a class="cta" href="#" id="confettiBtn" title="Tap">A small touch of love</a>
+
+      <div class="support">
         <h3>Read this slowly whenever you need it</h3>
-        <ul>
-          <li>You’re not alone. I’m with you — now and always.</li>
-          <li>Whatever happened, we’ll face it together. One step at a time.</li>
-          <li>You are loved, you are safe, and your feelings matter to me.</li>
-          <li>Text me when you’re ready. Or just read this and breathe — I’m here.</li>
-        </ul>
-      </section>
+        <p>• You’re not alone. I’m with you — now and always.</p>
+        <p>• Whatever happened, we’ll face it together. One step at a time.</p>
+        <p>• You are loved, you are safe, and your feelings matter to me.</p>
+        <p>• Text me when you’re ready. Or just read this and breathe — I’m here.</p>
+        <div class="breathe">
+          <div class="circle"><div class="circle-inner"></div></div>
+          <div class="breath-steps">Inhale 4 • Hold 4 • Exhale 6 — repeat</div>
+        </div>
+      </div>
 
-      <!-- دائرة ثابتة -->
-      <div class="breath-circle"></div>
-
-      <footer>Made with care — A23</footer>
-    </article>
-  </main>
-
-  <!-- عداد الأيام -->
-  <div class="since">
-    Since we met: <strong id="sinceCounter">—</strong>
+      <div class="footer">Made with care — A23</div>
+    </div>
   </div>
 
-  <!-- المفكرة ككتاب -->
-  <div class="notebook">
-    <textarea id="guestNote" placeholder="Write in the book…"></textarea>
-    <button id="saveNote">Save</button>
-  </div>
+<script>
+  // Supportive phrases that rotate
+  const lines = [
+    "If anything feels heavy today, hand it to me — I’ll carry it with you.",
+    "No matter what, you’re not facing this alone.",
+    "I’m proud of you, even on the days you can’t see it.",
+    "Take your time. I’ll wait. I’m not going anywhere.",
+    "Your feelings are safe with me — always.",
+    "You are loved more than any bad moment can measure.",
+    "Breathe. One small step is enough for today.",
+    "If you need me at 3AM or 3PM — I’m there.",
+    "I choose you on the bright days and the stormy ones.",
+    "You and I — team forever."
+  ];
 
-  <script>
-    const MEET_DATE_ISO = '2025-03-21T00:00:00';
-    function updateSince(){
-      const el = document.getElementById('sinceCounter');
-      if(!el) return;
-      const start = new Date(MEET_DATE_ISO).getTime();
-      const diff = Math.max(0, Date.now()-start);
-      const d = Math.floor(diff/86400000);
-      el.textContent = d + " days";
-    }
-    updateSince(); setInterval(updateSince,60000);
+  let idx = 0; const lineEl = document.getElementById('line'); const dotsEl = document.getElementById('dots');
+  lines.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i===0 ? ' active' : ''); dotsEl.appendChild(d); });
+  function renderLine(text){ lineEl.innerHTML=''; const span=document.createElement('span'); span.textContent=text; lineEl.appendChild(span);} 
+  function setActiveDot(i){ Array.from(dotsEl.children).forEach((d,k)=>d.classList.toggle('active', k===i)); }
+  function nextLine(){ renderLine(lines[idx]); setActiveDot(idx); idx=(idx+1)%lines.length; }
+  nextLine(); setInterval(nextLine, 2600);
 
-    // notebook
-    const noteKey='note_book';
-    const note=document.getElementById('guestNote');
-    const saveBtn=document.getElementById('saveNote');
-    if(note && saveBtn){
-      try{ note.value = localStorage.getItem(noteKey)||'' }catch{}
-      saveBtn.addEventListener('click',()=>{
-        try{ localStorage.setItem(noteKey,note.value);
-          saveBtn.textContent='Saved ✓';
-          setTimeout(()=>saveBtn.textContent='Save',1000);
-        }catch{}
-      });
-    }
-  </script>
+  // Stars
+  const stars=document.getElementById('stars');
+  for (let i=0;i<80;i++){ const s=document.createElement('div'); s.className='star'; s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh'; s.style.animationDelay=(Math.random()*6).toFixed(2)+'s'; s.style.opacity=(0.3+Math.random()*0.7).toFixed(2); stars.appendChild(s); }
+
+  // Hearts
+  const hearts=document.getElementById('hearts');
+  function spawnHeart(){ const h=document.createElement('div'); h.className='heart'; h.style.left=Math.random()*100+'vw'; h.style.bottom='-20px'; h.style.animationDuration=(8+Math.random()*5).toFixed(2)+'s'; h.style.opacity=(0.5+Math.random()*0.5).toFixed(2); hearts.appendChild(h); setTimeout(()=>h.remove(),12000); }
+  setInterval(spawnHeart,700);
+
+  // Confetti
+  const btn=document.getElementById('confettiBtn');
+  btn.addEventListener('click',(e)=>{ e.preventDefault(); for(let i=0;i<120;i++){ makeParticle(); } });
+  function makeParticle(){ const p=document.createElement('div'); p.style.position='fixed'; p.style.left=(window.innerWidth/2)+(Math.random()*60-30)+'px'; p.style.top=(window.innerHeight/2)+(Math.random()*20-10)+'px'; p.style.width='6px'; p.style.height='10px'; p.style.background=['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585'][Math.floor(Math.random()*5)]; p.style.transform='rotate('+(Math.random()*360)+'deg)'; p.style.opacity='0.9'; p.style.zIndex='9999'; document.body.appendChild(p); const dx=(Math.random()-0.5)*12; const dy=(Math.random()-0.9)*14; let x=0,y=0,life=0; const timer=setInterval(()=>{ life+=1; x+=dx; y+=dy+life*0.15; p.style.transform='translate('+x+'px,'+y+'px) rotate('+(life*12)+'deg)'; p.style.opacity=String(0.9-life/90); if(life>90){ clearInterval(timer); p.remove(); } },16); }
+</script>
 </body>
 </html>
