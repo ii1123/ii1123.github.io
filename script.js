@@ -1,5 +1,5 @@
-const HER_NAME = 'Lujain';
-const MEET_DATE = '2024-06-01T00:00:00';
+const HER_NAME = 'Lojain';
+const MEET_DATE = '2025-03-21T06:09:00';
 
 document.getElementById('heroName').textContent = HER_NAME;
 
