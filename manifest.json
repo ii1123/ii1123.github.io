@@ -1,0 +1,9 @@
+{
+  "name": "Galaxy for Lujain",
+  "short_name": "Galaxy",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#8B0B7A",
+  "icons": []
+}
