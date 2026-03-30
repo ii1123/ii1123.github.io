@@ -267,71 +267,63 @@
   })();
   </script>
 
-<!-- Mood Toy Sync - الإصدار المصلح والمختصر -->
-<script>
-(function(){
-  const toy = document.getElementById('moodToy'); 
-  const labelEl = document.getElementById('toyLabel');
-  if(!toy || !labelEl) return;
+  <!-- Mood Toy Sync -->
+  <script>
+  (function(){
+    const toy=document.getElementById('moodToy');
+    const labelEl=document.getElementById('toyLabel');
+    if(!toy||!labelEl) return;
 
-  let lastClick = 0; // لتتبع وقت آخر ضغطة وتجنب التداخل
+    const COUPLE_ID='lojain_a23';
+    const API_URL='https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
+    const KEY_LOCAL='lojain_mood';
 
-  const COUPLE_ID = 'lojain_a23';
-  // تأكد أن هذا الرابط هو الرابط الجديد اللي سويت له Deploy بوضع "Anyone"
-  const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec'; 
+    function apply(state){
+      const isSad = (state === 'sad');
+      toy.classList.remove('happy','sad');
+      toy.classList.add(isSad ? 'sad' : 'happy');
+      labelEl.textContent = isSad ? 'Mood: Sad' : 'Mood: Happy';
+    }
 
-  function apply(s){ 
-    const isSad = (s === 'sad');
-    toy.classList.remove('happy', 'sad');
-    toy.classList.add(isSad ? 'sad' : 'happy');
-    labelEl.textContent = isSad ? "Mood: Sad" : "Mood: Happy"; 
-  }
+    const cached = localStorage.getItem(KEY_LOCAL);
+    if(cached) apply(cached);
 
-  // وظيفة واحدة شاملة للإرسال والاستقبال
-  function syncMood(state = null) {
-    // إذا كان تحديثاً تلقائياً (state null) وضغطت مؤخراً، نتجاهل الطلب
-    if (!state && Date.now() - lastClick < 5000) return;
+    function fetchRemote(){
+      const cb='cb_mood_get_'+Math.random().toString(36).slice(2);
+      const s=document.createElement('script');
+      window[cb]=function(data){
+        const state = (typeof data==='string' ? data.trim() : (data && data.state ? data.state.trim() : '')) || 'happy';
+        localStorage.setItem(KEY_LOCAL, state);
+        apply(state);
+        try{ delete window[cb]; }catch{}
+        s.remove();
+      };
+      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&callback=${cb}&_=${Date.now()}`;
+      document.head.appendChild(s);
+    }
 
-    const cb = 'cb_' + Math.random().toString(36).slice(2);
-    const s = document.createElement('script');
-    
-    window[cb] = function(data) {
-      // استخراج الحالة سواء كانت نص مباشر أو كائن
-      const remoteState = (typeof data === 'string' ? data : (data && data.state) ? data.state : '').trim();
-      
-      // لا نحدث الواجهة إذا كان الرد على طلب "إرسال" (state exists) 
-      // أو إذا كان المستخدم قد ضغط على الزر قبل أقل من 5 ثوانٍ
-      if (remoteState && !state && (Date.now() - lastClick > 5000)) {
-        apply(remoteState);
-      }
-      
-      s.remove();
-      delete window[cb];
-    };
+    function updateRemote(state){
+      localStorage.setItem(KEY_LOCAL, state);
+      const cb='cb_mood_set_'+Math.random().toString(36).slice(2);
+      const s=document.createElement('script');
+      window[cb]=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=${encodeURIComponent(state)}&callback=${cb}&_=${Date.now()}`;
+      document.head.appendChild(s);
+    }
 
-    let url = `${API_URL}?id=${COUPLE_ID}&callback=${cb}&_=${Date.now()}`;
-    if (state) url += `&state=${state}`; // إذا فيه حالة جديدة نرسلها
-    
-    s.src = url;
-    s.onerror = () => { s.remove(); delete window[cb]; };
-    document.head.appendChild(s);
-  }
+    fetchRemote();
 
-  // أول ما يفتح الموقع: جيب الحالة من السيرفر فوراً
-  syncMood();
+    toy.addEventListener('click',()=>{
+      const next = toy.classList.contains('sad') ? 'happy' : 'sad';
+      apply(next);
+      updateRemote(next);
+    });
+  })();
+  </script>
 
-  // عند الضغط: غير محلياً وأرسل للسيرفر
-  toy.addEventListener('click', () => { 
-    lastClick = Date.now(); // تحديث وقت الضغطة
-    const next = toy.classList.contains('sad') ? 'happy' : 'sad'; 
-    apply(next); // تغيير فوري بصري
-    syncMood(next); // إرسال للسيرفر
-  });
-
-  // تحديث تلقائي كل 10 ثوانٍ عشان لو الطرف الثاني غير المود يظهر عندك
-  setInterval(syncMood, 10000);
-})();
-</script>  <!-- Mobile Fixes + IO -->
+  <!-- Mobile Fixes + IO -->
   <script>
   (function(){
     const isMobile=/Mobi|Android/i.test(navigator.userAgent)||window.innerWidth<520;
