@@ -274,6 +274,8 @@
   const labelEl = document.getElementById('toyLabel');
   if(!toy || !labelEl) return;
 
+  let lastClick = 0; // لتتبع وقت آخر ضغطة وتجنب التداخل
+
   const COUPLE_ID = 'lojain_a23';
   // تأكد أن هذا الرابط هو الرابط الجديد اللي سويت له Deploy بوضع "Anyone"
   const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec'; 
@@ -287,13 +289,22 @@
 
   // وظيفة واحدة شاملة للإرسال والاستقبال
   function syncMood(state = null) {
+    // إذا كان تحديثاً تلقائياً (state null) وضغطت مؤخراً، نتجاهل الطلب
+    if (!state && Date.now() - lastClick < 5000) return;
+
     const cb = 'cb_' + Math.random().toString(36).slice(2);
     const s = document.createElement('script');
     
     window[cb] = function(data) {
       // استخراج الحالة سواء كانت نص مباشر أو كائن
       const remoteState = (typeof data === 'string' ? data : (data && data.state) ? data.state : '').trim();
-      if (remoteState) apply(remoteState);
+      
+      // لا نحدث الواجهة إذا كان الرد على طلب "إرسال" (state exists) 
+      // أو إذا كان المستخدم قد ضغط على الزر قبل أقل من 5 ثوانٍ
+      if (remoteState && !state && (Date.now() - lastClick > 5000)) {
+        apply(remoteState);
+      }
+      
       s.remove();
       delete window[cb];
     };
@@ -311,6 +322,7 @@
 
   // عند الضغط: غير محلياً وأرسل للسيرفر
   toy.addEventListener('click', () => { 
+    lastClick = Date.now(); // تحديث وقت الضغطة
     const next = toy.classList.contains('sad') ? 'happy' : 'sad'; 
     apply(next); // تغيير فوري بصري
     syncMood(next); // إرسال للسيرفر
