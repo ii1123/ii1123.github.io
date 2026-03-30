@@ -6,22 +6,46 @@
   <title>Lojain — A23</title>
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=99">
+  <link rel="stylesheet" href="style.css?v=4">
 
   <style>
     :root { --vh: 1vh; }
     .wrap { min-height: 100svh; min-height: calc(var(--vh) * 100); padding: 16px; }
     .card { max-width: 92vw; margin: 0 auto; border-radius: 14px; }
-    .cta, button, .down { display: inline-block; width: 100%; max-width: 520px; padding: 12px 16px; font-size: 16px; border-radius: 12px; touch-action: manipulation; }
-    @media (max-width: 480px) { h1 { font-size: 28px; } .subtitle { font-size: 14px; line-height: 1.5; } .breath-steps { font-size: 13px; } .footer { font-size: 12px; } #sinceCounter { font-size: 13px; } }
+    .cta, button, .down {
+      display: inline-block; width: 100%; max-width: 520px;
+      padding: 12px 16px; font-size: 16px; border-radius: 12px; touch-action: manipulation;
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 28px; }
+      .subtitle { font-size: 14px; line-height: 1.5; }
+      .breath-steps { font-size: 13px; }
+      .footer { font-size: 12px; }
+      #sinceCounter { font-size: 13px; }
+    }
     .stars, .hearts { pointer-events: none; }
     .wrap, .section, .notebook { padding-bottom: 240px; }
-    .since { position: fixed !important; right: 16px; left: auto !important; transform: none !important; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 7; }
-    .mood-toy { position: fixed; right: 16px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 8; }
-    .notebook { display: block !important; position: relative; z-index: 2; max-width: 720px; margin: 24px auto; padding: 12px; }
+    .since {
+      position: fixed !important; right: 16px; left: auto !important;
+      transform: none !important;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 7;
+    }
+    .mood-toy {
+      position: fixed; right: 16px;
+      bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 8;
+    }
+    .notebook {
+      display: block !important; position: relative; z-index: 2;
+      max-width: 720px; margin: 24px auto; padding: 12px;
+    }
     #memo { width: 100%; box-sizing: border-box; min-height: 160px; resize: vertical; }
     #readyCard { position: relative; z-index: 2; }
-    @media (max-width: 600px) { .card { max-width: 94vw; } .notebook { max-width: 94vw; margin: 20px auto; } .mood-toy { right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); } .since { right: 12px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); } }
+    @media (max-width: 600px) {
+      .card { max-width: 94vw; }
+      .notebook { max-width: 94vw; margin: 20px auto; }
+      .mood-toy { right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+      .since { right: 12px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+    }
   </style>
 </head>
 
@@ -32,33 +56,34 @@
   <div class="wrap">
     <div class="card">
       <h1>Lojain ❤️</h1>
-      <p class="subtitle">If you ever feel overwhelmed, open this page. I’m here — always. — A23</p>
+      <p class="subtitle">If you ever feel overwhelmed, open this page. I'm here — always. — A23</p>
       <div class="line" id="line"></div>
       <div class="dots" id="dots" aria-hidden="true"></div>
       <a class="cta" href="#" id="confettiBtn" title="Tap">A small touch of love</a>
-      <a id="downLink" class="down" href="#readySection">↓ Scroll when you’re ready</a>
+      <a id="downLink" class="down" href="#readySection">↓ Scroll when you're ready</a>
 
       <div class="support">
         <h3>Read this slowly whenever you need it</h3>
-        <p>• You’re not alone. I’m with you — now and forever.</p>
-        <p>• Whatever happened, we’ll face it together. One step at a time.</p>
+        <p>• You're not alone. I'm with you — now and forever.</p>
+        <p>• Whatever happened, we'll face it together. One step at a time.</p>
         <p>• You are loved, you are safe, and your feelings matter to me.</p>
-        <p>• Text me when you’re ready. Or just read this and breathe — I’m here.</p>
+        <p>• Text me when you're ready. Or just read this and breathe — I'm here.</p>
 
         <div class="breathe">
           <div class="circle"><div class="circle-inner"></div></div>
           <div class="breath-steps">Inhale 4 • Hold 4 • Exhale 6 — repeat</div>
         </div>
       </div>
+
       <div class="footer">Made with care — A23</div>
     </div>
   </div>
 
   <section class="section" id="readySection">
     <div class="card" id="readyCard">
-      <h2 style="margin:0 0 10px 0">When you’re ready</h2>
+      <h2 style="margin:0 0 10px 0">When you're ready</h2>
       <p class="subtitle" style="text-align:left">Take a breath. When you feel okay, tap the button below.</p>
-      <button id="readyOnceBtn" class="cta" style="margin-top:10px">I’m ready — tap once</button>
+      <button id="readyOnceBtn" class="cta" style="margin-top:10px">I'm ready — tap once</button>
       <button id="resetReady" class="cta" style="margin-top:6px;">Reset (all devices)</button>
       <p id="readyOnceState" class="footer" style="margin-top:8px"></p>
     </div>
@@ -73,10 +98,11 @@
 
   <div class="since"><strong id="sinceCounter">—</strong></div>
 
-  <div class="mood-toy glass" id="moodToy" role="button" title="Click to toggle mood">
+  <!-- Mood Toy -->
+  <div class="mood-toy glass" id="moodToy" role="button" aria-pressed="false" title="Click to toggle mood">
     <div class="toy-label" id="toyLabel">Click me</div>
-    <div class="toy-figure" id="toyFigure">
-      <svg viewBox="0 0 200 200" width="120" height="120" class="toy-svg">
+    <div class="toy-figure" id="toyFigure" aria-hidden="true">
+      <svg viewBox="0 0 200 200" width="120" height="120" class="toy-svg" aria-hidden="true">
         <circle id="head" cx="100" cy="90" r="57" />
         <g class="face face-happy">
           <circle cx="80" cy="85" r="6" fill="#222"/>
@@ -95,10 +121,25 @@
     </div>
   </div>
 
+  <!-- ===== Scripts ===== -->
+
   <script>
     /* Rotating Lines */
-    let lines=["If anything feels heavy today, hand it to me — I’ll carry it with you.","No matter what, you’re not facing this alone.","I’m proud of you, even on the days you can’t see it.","Take your time. I’ll wait. I’m not going anywhere.","Your feelings are safe with me — always.","You are loved more than any bad moment can measure.","Breathe. One small step is enough for today.","If you need me at 3AM or 3PM — I’m there.","I choose you on the bright days and the stormy ones.","You and I — team forever."];
-    let idx=0; const lineEl=document.getElementById('line'); const dotsEl=document.getElementById('dots');
+    let lines=[
+      "If anything feels heavy today, hand it to me — I'll carry it with you.",
+      "No matter what, you're not facing this alone.",
+      "I'm proud of you, even on the days you can't see it.",
+      "Take your time. I'll wait. I'm not going anywhere.",
+      "Your feelings are safe with me — always.",
+      "You are loved more than any bad moment can measure.",
+      "Breathe. One small step is enough for today.",
+      "If you need me at 3AM or 3PM — I'm there.",
+      "I choose you on the bright days and the stormy ones.",
+      "You and I — team forever."
+    ];
+    let idx=0;
+    const lineEl=document.getElementById('line');
+    const dotsEl=document.getElementById('dots');
     lines.forEach((_,i)=>{ const d=document.createElement('div'); d.className='dot'+(i===0?' active':''); dotsEl.appendChild(d); });
     function renderLine(t){ lineEl.innerHTML=''; const s=document.createElement('span'); s.textContent=t; lineEl.appendChild(s); }
     function setActiveDot(i){ Array.from(dotsEl.children).forEach((d,k)=>d.classList.toggle('active',k===i)); }
@@ -106,88 +147,225 @@
     nextLine(); setInterval(nextLine,2600);
 
     /* Stars */
-    const stars=document.getElementById('stars');
+    const starsEl=document.getElementById('stars');
     for(let i=0;i<80;i++){
-      const s=document.createElement('div'); s.className='star'; s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
-      s.style.animationDelay=(Math.random()*6).toFixed(2)+'s'; stars.appendChild(s);
+      const s=document.createElement('div'); s.className='star';
+      s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
+      s.style.animationDelay=(Math.random()*6).toFixed(2)+'s';
+      s.style.opacity=(0.3+Math.random()*0.7).toFixed(2);
+      starsEl.appendChild(s);
     }
 
     /* Hearts */
-    const hearts=document.getElementById('hearts');
+    const heartsEl=document.getElementById('hearts');
     function spawnHeart(){
-      const h=document.createElement('div'); h.className='heart'; h.style.left=Math.random()*100+'vw'; h.style.bottom='-20px';
-      h.style.animationDuration=(8+Math.random()*5).toFixed(2)+'s'; hearts.appendChild(h);
-      setTimeout(()=>h.remove(),12000);
+      const h=document.createElement('div'); h.className='heart';
+      h.style.left=Math.random()*100+'vw'; h.style.bottom='-20px';
+      h.style.animationDuration=(8+Math.random()*5).toFixed(2)+'s';
+      h.style.opacity=(0.5+Math.random()*0.5).toFixed(2);
+      heartsEl.appendChild(h); setTimeout(()=>h.remove(),12000);
     }
     setInterval(spawnHeart,700);
 
     /* Confetti */
-    const btnConfetti=document.getElementById('confettiBtn');
-    btnConfetti.addEventListener('click',(e)=>{ e.preventDefault(); for(let i=0;i<120;i++){ makeParticle(); } });
+    document.getElementById('confettiBtn').addEventListener('click',(e)=>{
+      e.preventDefault();
+      for(let i=0;i<120;i++) makeParticle();
+    });
     function makeParticle(){
-      const p=document.createElement('div'); p.style.position='fixed'; p.style.left=(window.innerWidth/2)+(Math.random()*60-30)+'px';
-      p.style.top=(window.innerHeight/2)+(Math.random()*20-10)+'px'; p.style.width='6px'; p.style.height='10px';
+      const p=document.createElement('div');
+      p.style.cssText=`position:fixed;width:6px;height:10px;z-index:9999;`;
+      p.style.left=(window.innerWidth/2)+(Math.random()*60-30)+'px';
+      p.style.top=(window.innerHeight/2)+(Math.random()*20-10)+'px';
       p.style.background=['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585'][Math.floor(Math.random()*5)];
-      p.style.transform='rotate('+(Math.random()*360)+'deg)'; p.style.zIndex='9999'; document.body.appendChild(p);
-      let x=0,y=0,life=0; const dx=(Math.random()-0.5)*12, dy=(Math.random()-0.9)*14;
-      const t=setInterval(()=>{ life++; x+=dx; y+=dy+life*0.15; p.style.transform=`translate(${x}px,${y}px) rotate(${life*12}deg)`; p.style.opacity=String(0.9-life/90); if(life>90){ clearInterval(t); p.remove(); } },16);
+      p.style.transform='rotate('+(Math.random()*360)+'deg)';
+      document.body.appendChild(p);
+      const dx=(Math.random()-0.5)*12, dy=(Math.random()-0.9)*14; let x=0,y=0,life=0;
+      const t=setInterval(()=>{
+        life++; x+=dx; y+=dy+life*0.15;
+        p.style.transform=`translate(${x}px,${y}px) rotate(${life*12}deg)`;
+        p.style.opacity=String(0.9-life/90);
+        if(life>90){ clearInterval(t); p.remove(); }
+      },16);
     }
 
     /* Memo */
-    const memo=document.getElementById('memo'); const saveMemo=document.getElementById('saveMemo');
-    try{ memo.value=localStorage.getItem('memo_lo')||'' }catch{}
-    saveMemo.addEventListener('click',()=>{ try{ localStorage.setItem('memo_lo',memo.value); saveMemo.textContent='Saved ✓'; setTimeout(()=>saveMemo.textContent='Save',1000)}catch{} });
+    const memo=document.getElementById('memo');
+    const saveMemo=document.getElementById('saveMemo');
+    try{ memo.value=localStorage.getItem('memo_lo')||''; }catch{}
+    saveMemo.addEventListener('click',()=>{
+      try{ localStorage.setItem('memo_lo',memo.value); saveMemo.textContent='Saved ✓'; setTimeout(()=>saveMemo.textContent='Save',1000); }catch{}
+    });
 
     /* Since Counter */
     function updateSince(){
       const el=document.getElementById('sinceCounter'); if(!el) return;
-      const diff=Math.max(0, Date.now()-new Date('2025-03-21T06:09:00').getTime());
-      const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+      const diff=Math.max(0,Date.now()-new Date('2025-03-21T06:09:00').getTime());
+      const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000),
+            m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
       el.textContent=`Since we met: ${d}d ${h}h ${m}m ${s}s`;
     }
-    setInterval(updateSince,1000); updateSince();
+    updateSince(); setInterval(updateSince,1000);
   </script>
 
+  <!-- I'm Ready Sync -->
   <script>
-    /* I'm Ready Sync */
-    (function(){
-      const COUPLE_ID='lojain_a23_ready'; const API_URL='https://script.google.com/macros/s/AKfycbwfrBBb4NLNHDX3M0_C80Jut1V6tblDaecBPWBgqSUqhr0E1EIopF86GkJszmyI2seBjw/exec';
-      const readyBtn=document.getElementById('readyOnceBtn'); const stateEl=document.getElementById('readyOnceState');
-      function jsonp(url){ return new Promise(resolve=>{ const cb='cb_'+Math.random().toString(36).slice(2); const s=document.createElement('script'); window[cb]=d=>{resolve(d); s.remove(); delete window[cb];}; s.src=`${url}${url.includes('?')?'&':'?'}callback=${cb}&_=${Date.now()}`; document.head.appendChild(s); }); }
-      async function fetchState(){ const v=await jsonp(`${API_URL}?id=${COUPLE_ID}`); if(v==='ready'){ readyBtn.disabled=true; readyBtn.textContent='✔ Already marked'; } }
-      readyBtn.addEventListener('click', async()=>{ readyBtn.disabled=true; readyBtn.textContent='✔ Already marked'; await jsonp(`${API_URL}?id=${COUPLE_ID}&state=ready`); });
-      document.getElementById('resetReady').addEventListener('click', async()=>{ await jsonp(`${API_URL}?id=${COUPLE_ID}&state=not_ready`); readyBtn.disabled=false; readyBtn.textContent="I’m ready — tap once"; });
-      fetchState();
-    })();
+  (function(){
+    const COUPLE_ID='lojain_a23_ready';
+    const API_URL='https://script.google.com/macros/s/AKfycbwfrBBb4NLNHDX3M0_C80Jut1V6tblDaecBPWBgqSUqhr0E1EIopF86GkJszmyI2seBjw/exec';
+    const readyBtn=document.getElementById('readyOnceBtn');
+    const resetBtn=document.getElementById('resetReady');
+    const stateEl=document.getElementById('readyOnceState');
+    if(!readyBtn||!stateEl) return;
+
+    function jsonp(url){
+      return new Promise((resolve,reject)=>{
+        const cb='cb_'+Math.random().toString(36).slice(2);
+        const s=document.createElement('script');
+        window[cb]=(data)=>{ resolve(data); try{delete window[cb];}catch{} s.remove(); };
+        s.onerror=(e)=>{ reject(e); try{delete window[cb];}catch{} s.remove(); };
+        s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&_='+Date.now();
+        document.head.appendChild(s);
+      });
+    }
+
+    function applyReady(ts){ readyBtn.disabled=true; readyBtn.textContent='✔ Already marked'; stateEl.textContent=ts||'Marked — synced across devices.'; }
+    function clearReady(){ readyBtn.disabled=false; readyBtn.textContent="I'm ready — tap once"; stateEl.textContent=''; }
+
+    async function fetchState(){
+      try{ const val=await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}`); val==='ready'?applyReady():clearReady(); }
+      catch(e){ console.warn('fetchState failed',e); }
+    }
+    async function markReady(){
+      try{ const ts=new Date().toLocaleString(); await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=ready`); applyReady('Marked on '+ts+' — synced.'); }
+      catch(e){ console.warn('markReady failed',e); }
+    }
+    async function doReset(){
+      try{ await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=not_ready`); clearReady(); }
+      catch(e){ console.warn('resetReady failed',e); }
+    }
+
+    fetchState();
+    readyBtn.addEventListener('click',()=>{ if(!readyBtn.disabled) markReady(); });
+    if(resetBtn) resetBtn.addEventListener('click',doReset);
+  })();
   </script>
 
+  <!-- Smooth Scroll -->
   <script>
-    /* Mood Sync & Smooth Scroll */
-    (function(){
-      const toy=document.getElementById('moodToy'); const labelEl=document.getElementById('toyLabel');
-      const API_URL='https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
-      function apply(s){ toy.className='mood-toy glass '+(s==='sad'?'sad':'happy'); labelEl.textContent=s==='sad'?"Mood: Sad":"Mood: Happy"; }
-      function jsonp(url){ const cb='cb_'+Math.random().toString(36).slice(2); const s=document.createElement('script'); window[cb]=d=>{apply(d.state||d); s.remove(); delete window[cb];}; s.src=`${url}&callback=${cb}&_=${Date.now()}`; document.head.appendChild(s); }
-      toy.addEventListener('click', ()=>{ const next=toy.classList.contains('sad')?'happy':'sad'; apply(next); jsonp(`${API_URL}?id=lojain_a23&state=${next}`); });
-      jsonp(`${API_URL}?id=lojain_a23`);
-
-      const link=document.getElementById('downLink');
-      link.addEventListener('click', e=>{ e.preventDefault(); document.getElementById('readySection').scrollIntoView({behavior:'smooth'}); });
-    })();
-  </script>
-
-  <script>
-    /* Mobile Fixes & IO */
-    (function(){
-      const isMobile=/Mobi|Android/i.test(navigator.userAgent);
-      function setVh(){ document.documentElement.style.setProperty('--vh', `${window.innerHeight*0.01}px`); }
-      window.addEventListener('resize', setVh); setVh();
-      if(isMobile){
-        const stars=document.querySelectorAll('.star'); stars.forEach((s,i)=>{if(i%2===0)s.remove();});
+  (function(){
+    const link=document.getElementById('downLink');
+    const target=document.getElementById('readySection');
+    if(!link||!target) return;
+    const prefersReduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    link.addEventListener('click',(e)=>{
+      e.preventDefault();
+      if('scrollBehavior' in document.documentElement.style){
+        target.scrollIntoView({behavior:prefersReduced?'auto':'smooth',block:'start'}); return;
       }
-      const io=new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.disconnect(); } }); }, {threshold:0.2});
-      const card=document.getElementById('readyCard'); if(card) io.observe(card);
-    })();
+      const start=window.pageYOffset||document.documentElement.scrollTop;
+      const end=target.getBoundingClientRect().top+start;
+      const dist=end-start, dur=500; let startTs;
+      function step(ts){
+        if(!startTs) startTs=ts;
+        const t=Math.min(1,(ts-startTs)/dur);
+        const ease=t<.5?2*t*t:-1+(4-2*t)*t;
+        window.scrollTo(0,start+dist*ease);
+        if(t<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  })();
   </script>
+
+  <!-- Mood Toy Sync — الإصلاح الرئيسي -->
+  <script>
+  (function(){
+    const toy=document.getElementById('moodToy');
+    const labelEl=document.getElementById('toyLabel');
+    if(!toy||!labelEl) return;
+
+    const COUPLE_ID='lojain_a23';
+    const API_URL='https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
+    const KEY_LOCAL='lojain_mood';
+
+    /* تطبيق الحالة على الدمية */
+    function apply(state){
+      const isSad = (state === 'sad');
+      toy.classList.remove('happy','sad');
+      toy.classList.add(isSad ? 'sad' : 'happy');
+      labelEl.textContent = isSad ? 'Mood: Sad' : 'Mood: Happy';
+    }
+
+    /* تحميل الحالة المحفوظة فوراً (بدون انتظار الشبكة) */
+    const cached = localStorage.getItem(KEY_LOCAL);
+    if(cached) apply(cached);
+
+    /* جلب الحالة من السيرفر عبر JSONP */
+    function fetchRemote(){
+      const cb='cb_mood_get_'+Math.random().toString(36).slice(2);
+      const s=document.createElement('script');
+      window[cb]=function(data){
+        /* السيرفر يرجع string مباشرة أو object فيه .state */
+        const state = (typeof data==='string' ? data.trim() : (data && data.state ? data.state.trim() : '')) || 'happy';
+        localStorage.setItem(KEY_LOCAL, state);
+        apply(state);
+        try{ delete window[cb]; }catch{}
+        s.remove();
+      };
+      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&callback=${cb}&_=${Date.now()}`;
+      document.head.appendChild(s);
+    }
+
+    /* إرسال الحالة الجديدة للسيرفر */
+    function updateRemote(state){
+      localStorage.setItem(KEY_LOCAL, state);
+      const cb='cb_mood_set_'+Math.random().toString(36).slice(2);
+      const s=document.createElement('script');
+      window[cb]=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
+      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=${encodeURIComponent(state)}&callback=${cb}&_=${Date.now()}`;
+      document.head.appendChild(s);
+    }
+
+    /* تحميل عند فتح الصفحة */
+    fetchRemote();
+
+    /* النقر لتغيير المزاج */
+    toy.addEventListener('click',()=>{
+      const next = toy.classList.contains('sad') ? 'happy' : 'sad';
+      apply(next);
+      updateRemote(next);
+    });
+  })();
+  </script>
+
+  <!-- Mobile Fixes + IO -->
+  <script>
+  (function(){
+    const isMobile=/Mobi|Android/i.test(navigator.userAgent)||window.innerWidth<520;
+    function setVh(){ document.documentElement.style.setProperty('--vh',`${window.innerHeight*0.01}px`); }
+    setVh(); window.addEventListener('resize',setVh);
+
+    if(isMobile){
+      const starsWrap=document.getElementById('stars');
+      if(starsWrap){ const many=starsWrap.querySelectorAll('.star'); many.forEach((s,i)=>{ if(i%2===0) s.remove(); }); }
+    }
+
+    window.addEventListener('touchstart',()=>{},{passive:true});
+    window.addEventListener('touchmove',()=>{},{passive:true});
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      const card=document.getElementById('readyCard'); if(!card) return;
+      if(!('IntersectionObserver' in window)){ card.classList.add('show'); return; }
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ card.classList.add('show'); io.disconnect(); } });
+      },{threshold:0.2});
+      io.observe(card);
+    });
+  })();
+  </script>
+
 </body>
 </html>
