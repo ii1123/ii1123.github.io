@@ -4,242 +4,199 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lojain — A23</title>
-  <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  
   <style>
     :root {
       --bg1: #0f1020;
       --bg2: #1b1e3a;
       --accent: #ff4d6d;
-      --accent-glow: rgba(255, 77, 109, 0.4);
       --text: #f7f7ff;
       --muted: #cfd3ff;
       --glass: rgba(255, 255, 255, .03);
       --glass-bd: rgba(255, 255, 255, .08);
-      --ring: #ffffff33;
-      --ring-strong: #ffffff66;
       --shadow: 0 10px 40px rgba(0, 0, 0, .35);
-      --happy-glow: rgba(255, 200, 100, 0.3);
-      --sad-glow: rgba(100, 150, 255, 0.3);
     }
 
-    /* ===== Base ===== */
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     html, body {
-      height: 100%; margin: 0;
-      font-family: 'Tajawal', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1200px circle at 20% 10%, rgba(255, 77, 109, .07), transparent 40%),
-        radial-gradient(1000px circle at 90% 80%, rgba(207, 211, 255, .08), transparent 45%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
+      height: 100%;
+      margin: 0;
+      font-family: 'Tajawal', system-ui, sans-serif;
+      background: radial-gradient(1200px circle at 20% 10%, rgba(255, 77, 109, .07), transparent 40%),
+                  radial-gradient(1000px circle at 90% 80%, rgba(207, 211, 255, .08), transparent 45%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
       color: var(--text);
       overflow-x: hidden;
-      overflow-y: auto;
     }
-    html { scroll-behavior: smooth; }
-    .glass { background: var(--glass); border: 1px solid var(--glass-bd); backdrop-filter: blur(8px); }
 
-    /* ===== Background particles ===== */
     .stars, .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .star { position: absolute; width: 2px; height: 2px; background: rgba(255, 255, 255, .8); border-radius: 50%; opacity: 0; animation: twinkle 6s linear infinite; }
-    @keyframes twinkle { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 50% { opacity: .6; } 100% { transform: translateY(40px); opacity: 0; } }
-    .heart { position: absolute; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); border-radius: 2px; opacity: .8; animation: float 10s linear infinite; }
+    .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle 6s linear infinite; }
+    @keyframes twinkle { 0% { opacity: 0; } 10% { opacity: 1; } 50% { opacity: .6; } 100% { opacity: 0; transform: translateY(40px); } }
+    .heart { position: absolute; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); animation: float 10s linear infinite; }
     .heart::before, .heart::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; }
     .heart::before { top: -6px; left: 0; } .heart::after { left: -6px; top: 0; }
-    @keyframes float { 0% { transform: translateY(0) rotate(45deg) scale(1); opacity: 0; } 10% { opacity: .7; } 50% { transform: translateY(-55vh) rotate(45deg) scale(1.15); } 100% { transform: translateY(-110vh) rotate(45deg) scale(1.3); opacity: 0; } }
+    @keyframes float { 0% { transform: translateY(0) rotate(45deg); opacity: 0; } 100% { transform: translateY(-110vh) rotate(45deg); opacity: 0; } }
 
-    /* ===== Layout ===== */
-    .wrap { position: relative; z-index: 3; min-height: 100%; display: grid; place-items: center; padding: 24px; text-align: center; padding-bottom: 260px; }
+    .wrap { position: relative; z-index: 3; min-height: 100%; display: grid; place-items: center; padding: 24px; padding-bottom: 260px; }
     .card { background: var(--glass); border: 1px solid var(--glass-bd); box-shadow: var(--shadow); border-radius: 28px; padding: 32px 28px; max-width: 760px; width: 100%; backdrop-filter: blur(12px); }
-    h1 { margin: 0 0 12px 0; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; }
-    .subtitle { margin: 0 0 24px 0; font-size: 17px; color: var(--muted); line-height: 1.5; }
-    .footer { margin-top: 24px; font-size: 13px; color: var(--muted); opacity: 0.7; }
+    h1 { margin: 0 0 12px; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .subtitle { margin-bottom: 24px; font-size: 17px; color: var(--muted); }
+    .footer { margin-top: 24px; font-size: 13px; color: var(--muted); opacity: 0.7; text-align: center; }
 
-    /* ===== Rotating lines ===== */
-    .line { min-height: 120px; display: grid; place-items: center; font-size: 22px; font-weight: 700; line-height: 1.5; padding: 16px 8px; background: rgba(255,255,255,0.02); border-radius: 20px; margin: 8px 0; }
-    .line span { display: inline-block; opacity: 0; transform: translateY(12px) scale(.98); filter: blur(6px); animation: in 800ms ease forwards; }
-    @keyframes in { to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+    .line { min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; text-align: center; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 20px; margin: 8px 0; }
     .dots { margin-top: 16px; display: flex; justify-content: center; gap: 10px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .2); transition: all 0.3s ease; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .2); transition: all 0.3s; }
     .dot.active { background: var(--accent); transform: scale(1.2); box-shadow: 0 0 8px var(--accent); }
 
-    /* ===== Buttons ===== */
     .cta, .down {
       display: block; padding: 14px 22px; border-radius: 60px;
       border: 1px solid rgba(255, 255, 255, .2); text-decoration: none;
       color: var(--text) !important; font-weight: 700; font-size: 15px;
-      background: rgba(255, 255, 255, .06);
+      background: rgba(255, 255, 255, .06); text-align: center; cursor: pointer;
+      width: 100%; max-width: 520px; margin: 12px auto;
       transition: all .2s ease;
-      text-align: center; cursor: pointer;
-      width: 100%; max-width: 520px; margin: 12px auto; box-sizing: border-box;
-      backdrop-filter: blur(4px);
     }
-    .cta:hover, .down:hover {
-      background: rgba(255, 255, 255, .12); transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,.3), 0 0 0 2px var(--ring);
-      border-color: var(--accent);
-    }
+    .cta:hover, .down:hover { background: rgba(255, 255, 255, .12); transform: translateY(-2px); border-color: var(--accent); }
 
-    /* ===== Mood Toy - Enhanced ===== */
+    /* Mood Toy */
     .mood-toy {
       position: fixed; right: 20px; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); z-index: 100;
       display: flex; flex-direction: column; align-items: center; gap: 8px; 
-      padding: 16px 20px; border-radius: 60px;
-      background: rgba(20, 22, 45, 0.85);
+      padding: 14px 18px; border-radius: 60px;
+      background: rgba(20, 22, 45, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05);
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.3s;
     }
-    .mood-toy:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); }
-    .mood-toy:active { transform: scale(0.98); }
-    
-    .toy-label { 
-      font-size: 14px; font-weight: 800; 
-      background: linear-gradient(135deg, #fff, var(--muted));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 0.5px;
-    }
-    
-    .toy-figure { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
-    .toy-svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); transition: all 0.3s ease; }
-    
-    /* Face styles */
-    .face-happy, .face-sad { transition: opacity 0.3s ease; }
-    .mood-toy.happy .face-sad { display: none; }
+    .mood-toy:active { transform: scale(0.97); }
+    .toy-label { font-size: 13px; font-weight: 800; color: var(--muted); }
+    .toy-figure { width: 55px; height: 55px; }
+    .toy-svg { width: 100%; height: 100%; }
+    .face-sad { display: none; }
     .mood-toy.sad .face-happy { display: none; }
-    
-    /* Happy mood glow */
-    .mood-toy.happy {
-      border-color: rgba(255, 200, 100, 0.5);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 200, 100, 0.3);
-    }
-    .mood-toy.happy .toy-svg {
-      filter: drop-shadow(0 0 12px rgba(255, 200, 100, 0.6));
-    }
-    
-    /* Sad mood glow */
-    .mood-toy.sad {
-      border-color: rgba(100, 150, 255, 0.5);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(100, 150, 255, 0.3);
-    }
-    .mood-toy.sad .toy-svg {
-      filter: drop-shadow(0 0 12px rgba(100, 150, 255, 0.6));
-    }
+    .mood-toy.sad .face-sad { display: block; }
+    .mood-toy.happy { border-color: rgba(255, 200, 100, 0.5); box-shadow: 0 0 20px rgba(255, 200, 100, 0.3); }
+    .mood-toy.sad { border-color: rgba(100, 150, 255, 0.5); box-shadow: 0 0 20px rgba(100, 150, 255, 0.3); }
 
-    /* ===== Since Widget ===== */
     .since {
       position: fixed !important; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       z-index: 9; background: rgba(15, 16, 32, 0.7); border: 1px solid var(--glass-bd);
-      backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 40px; font-size: 12px;
-      font-weight: 500; letter-spacing: 0.3px;
+      backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 40px; font-size: 11px;
     }
 
-    /* ===== Notebook ===== */
-    .notebook { max-width: 720px; margin: 32px auto; position: relative; padding: 0 20px; }
-    .title { font-size: 20px; font-weight: 800; margin-bottom: 12px; text-align: center; color: var(--muted); }
-    #memo { width: 100%; border-radius: 20px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-bd); padding: 16px; font-family: inherit; font-size: 15px; resize: vertical; transition: all 0.3s; }
-    #memo:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
-    button { background: linear-gradient(135deg, rgba(255,77,109,0.8), rgba(255,77,109,0.4)); border: none; color: white; font-weight: bold; cursor: pointer; transition: all 0.2s; padding: 12px 24px; border-radius: 40px; font-size: 15px; margin-top: 12px; width: 100%; max-width: 200px; margin-left: auto; margin-right: auto; display: block; }
-    button:active { transform: scale(0.97); }
-    .memo-hint { font-size: 11px; color: #888; margin-top: 12px; text-align: center; }
+    .notebook { max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: center; }
+    .title { font-size: 20px; font-weight: 800; color: var(--muted); margin-bottom: 15px; }
+    #memo { width: 100%; border-radius: 20px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-bd); padding: 16px; font-family: inherit; font-size: 15px; resize: vertical; }
+    #memo:focus { outline: none; border-color: var(--accent); }
+    button { background: linear-gradient(135deg, rgba(255,77,109,0.8), rgba(255,77,109,0.4)); border: none; color: white; font-weight: bold; cursor: pointer; padding: 12px 28px; border-radius: 40px; font-size: 15px; margin-top: 15px; display: inline-block; }
+    .memo-hint { font-size: 11px; color: #888; margin-top: 12px; }
 
-    /* ===== Breathe Circle ===== */
-    .breathe { margin: 32px 0 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-    .circle {
-      width: 80px !important; height: 80px !important; min-width: 80px; min-height: 80px;
-      border: 3px solid var(--accent); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      animation: breathe 14s infinite ease-in-out; flex-shrink: 0;
-      box-shadow: 0 0 20px rgba(255,77,109,0.3);
-    }
-    .circle-inner { width: 16px; height: 16px; background: var(--accent); border-radius: 50%; pointer-events: none; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.3); opacity: 1; } }
-    @keyframes breathe {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      28% { transform: scale(1.5); opacity: 1; }
-      57% { transform: scale(1.5); opacity: 1; }
-    }
-    .breath-steps { font-size: 13px; color: var(--muted); opacity: 0.9; text-align: center; font-weight: 500; }
+    .breathe { margin: 30px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .circle { width: 70px; height: 70px; border: 3px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: breathe 14s infinite; }
+    .circle-inner { width: 14px; height: 14px; background: var(--accent); border-radius: 50%; }
+    @keyframes breathe { 0%, 100% { transform: scale(1); } 28% { transform: scale(1.4); } 57% { transform: scale(1.4); } }
+    .breath-steps { font-size: 12px; color: var(--muted); }
 
-    /* ===== Support Section ===== */
     .support { text-align: center; padding: 20px 8px; }
-    .support h3 { font-size: 20px; font-weight: 800; margin: 0 0 20px 0; color: var(--text); }
-    .support p { font-size: 16px; line-height: 2; color: var(--muted); margin: 10px 0; text-align: center; }
+    .support h3 { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+    .support p { font-size: 15px; line-height: 1.8; color: var(--muted); margin: 8px 0; }
 
-    /* ===== Section ===== */
-    .section { position: relative; z-index: 2; padding: 20px 16px 200px; }
+    .section { position: relative; z-index: 2; padding: 20px 16px 100px; }
 
-    /* ===== Grateful / Ready Card ===== */
+    /* توسيط العناصر */
+    #readySection {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+
     #readyCard {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 28px; text-align: center; padding: 40px 28px;
-      opacity: 0; transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      width: 100% !important;
+      max-width: 550px !important;
+      margin: 0 auto !important;
+      padding: 30px 20px !important;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
     }
     #readyCard.show { opacity: 1; transform: translateY(0); }
 
-    /* ===== Planet Scene ===== */
     .planet-scene {
-      position: relative; width: 160px; height: 160px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto;
+      position: relative !important;
+      width: 160px !important;
+      height: 160px !important;
+      margin: 0 auto !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
     .orbit-ring {
-      position: absolute; inset: 0; border-radius: 50%;
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      animation: spin-ring 16s linear infinite;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 140px !important;
+      height: 140px !important;
+      border-radius: 50% !important;
+      border: 2px dashed rgba(255,255,255,0.3) !important;
+      animation: spinRing 12s linear infinite !important;
     }
-    @keyframes spin-ring { to { transform: rotate(360deg); } }
-    .planet { font-size: 58px; z-index: 2; line-height: 1; animation: planet-bob 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(255, 77, 109, 0.5)); }
-    @keyframes planet-bob { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.08) rotate(5deg); } }
-    .rocket { position: absolute; font-size: 22px; top: -5px; left: 50%; transform-origin: 0 85px; animation: rocket-orbit 8s linear infinite; }
-    @keyframes rocket-orbit { to { transform: translateX(-50%) rotate(360deg); } }
+    @keyframes spinRing { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .planet { font-size: 56px !important; position: relative !important; z-index: 2 !important; animation: bob 3s ease-in-out infinite !important; }
+    @keyframes bob { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .rocket { position: absolute !important; font-size: 22px !important; top: -5px !important; left: 50% !important; transform: translateX(-50%) !important; animation: orbit 7s linear infinite !important; }
+    @keyframes orbit { 0% { transform: translateX(-50%) rotate(0deg) translateX(65px) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg) translateX(65px) rotate(-360deg); } }
 
-    /* ===== Grateful Message ===== */
-    .grateful-msg { max-width: 520px; }
-    .grateful-title { font-size: 26px; font-weight: 900; margin: 0 0 16px 0; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .grateful-text { font-size: 16px; line-height: 1.9; color: var(--muted); margin: 0 0 12px 0; }
-    .grateful-sub { font-size: 15px; color: var(--accent); font-weight: 800; margin: 8px 0 0; letter-spacing: 0.3px; }
+    .grateful-msg { text-align: center !important; margin: 0 auto !important; max-width: 450px !important; }
+    .grateful-title { font-size: 26px !important; font-weight: 900 !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .grateful-text { font-size: 16px !important; line-height: 1.8 !important; color: var(--muted) !important; }
+    .grateful-sub { font-size: 15px !important; color: var(--accent) !important; font-weight: 800 !important; margin-top: 12px !important; }
 
-    /* ===== Distance Widget ===== */
     .distance-widget {
-      display: flex; align-items: center; gap: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-bd);
-      border-radius: 60px; padding: 16px 24px;
-      width: 100%; max-width: 460px;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 15px !important;
+      margin: 20px auto !important;
+      padding: 12px 20px !important;
+      background: rgba(255,255,255,0.06) !important;
+      border-radius: 50px !important;
+      width: auto !important;
+      min-width: 260px !important;
     }
-    .distance-city { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 70px; }
-    .city-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: city-pulse 2s ease-in-out infinite; }
-    .city-dot--end { background: #cfd3ff; box-shadow: 0 0 12px #cfd3ff; }
-    @keyframes city-pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.4); opacity: 1; } }
-    .city-name { font-size: 13px; color: var(--muted); font-weight: 700; white-space: nowrap; }
-    .distance-track { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
-    .distance-line { width: 100%; height: 3px; background: linear-gradient(90deg, var(--accent), rgba(207,211,255,0.6)); border-radius: 3px; }
-    .distance-plane { font-size: 20px; animation: fly 3s ease-in-out infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-    @keyframes fly { 0% { transform: translateX(-35px) scaleX(1); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(35px) scaleX(1); opacity: 0; } }
-    .distance-label { font-size: 20px; font-weight: 900; color: var(--text); letter-spacing: 1px; }
+    .distance-city { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 5px !important; }
+    .city-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; background: var(--accent) !important; box-shadow: 0 0 8px var(--accent) !important; animation: pulseDot 1.5s infinite !important; }
+    .city-dot--end { background: #cfd3ff !important; box-shadow: 0 0 8px #cfd3ff !important; }
+    @keyframes pulseDot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+    .city-name { font-size: 12px !important; color: var(--muted) !important; font-weight: 700 !important; }
+    .distance-track { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 6px !important; }
+    .distance-line { width: 100% !important; height: 2px !important; background: linear-gradient(90deg, var(--accent), #cfd3ff) !important; }
+    .distance-plane { font-size: 18px !important; animation: flyPlane 2.5s ease-in-out infinite !important; }
+    @keyframes flyPlane { 0% { transform: translateX(-25px); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateX(25px); opacity: 0; } }
+    .distance-label { font-size: 20px !important; font-weight: 900 !important; color: var(--text) !important; }
 
-    /* ===== Mobile Responsive ===== */
     @media (max-width: 600px) {
-      .mood-toy { right: 12px; bottom: 95px; padding: 12px 16px; }
-      .mood-toy .toy-figure { width: 55px; height: 55px; }
-      .since { right: 12px; bottom: 18px; font-size: 10px; padding: 6px 12px; }
-      .wrap { padding: 16px; padding-bottom: 260px; }
-      .card { padding: 24px 20px; }
-      h1 { font-size: 28px; }
-      .line { font-size: 18px; min-height: 100px; }
-      .distance-widget { padding: 12px 16px; gap: 10px; }
+      .mood-toy { right: 12px; bottom: 85px; padding: 10px 14px; }
+      .mood-toy .toy-figure { width: 45px; height: 45px; }
+      .since { right: 12px; bottom: 18px; font-size: 9px; padding: 5px 10px; }
+      .planet-scene { width: 130px !important; height: 130px !important; }
+      .planet { font-size: 48px !important; }
+      .rocket { font-size: 18px !important; animation: orbit 7s linear infinite !important; }
+      @keyframes orbit { 0% { transform: translateX(-50%) rotate(0deg) translateX(55px) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg) translateX(55px) rotate(-360deg); } }
+      .grateful-title { font-size: 22px !important; }
+      .grateful-text { font-size: 14px !important; }
+      .distance-widget { gap: 10px; padding: 10px 15px; min-width: 220px; }
       .distance-label { font-size: 16px; }
-      .distance-plane { font-size: 16px; }
-      .city-name { font-size: 11px; }
-      .grateful-title { font-size: 22px; }
-      .support p { font-size: 14px; line-height: 1.7; }
+      .city-name { font-size: 10px; }
     }
   </style>
 </head>
@@ -253,8 +210,8 @@
       <h1>Lojain ❤️</h1>
       <p class="subtitle">If you ever feel overwhelmed, open this page. I'm here — always. — A23</p>
       <div class="line" id="line"></div>
-      <div class="dots" id="dots" aria-hidden="true"></div>
-      <a class="cta" href="#" id="confettiBtn" title="Tap">✨ A small touch of love ✨</a>
+      <div class="dots" id="dots"></div>
+      <a class="cta" href="#" id="confettiBtn">✨ A small touch of love ✨</a>
       <a id="downLink" class="down" href="#readySection">↓ Scroll when you're ready ↓</a>
 
       <div class="support">
@@ -263,18 +220,15 @@
         <p>• Whatever happened, we'll face it together. One step at a time.</p>
         <p>• You are loved, you are safe, and your feelings matter to me.</p>
         <p>• Text me when you're ready. Or just read this and breathe — I'm here.</p>
-
         <div class="breathe">
           <div class="circle"><div class="circle-inner"></div></div>
           <div class="breath-steps">🌬️ Inhale 4 • Hold 4 • Exhale 6 — repeat 🌬️</div>
         </div>
       </div>
-
       <div class="footer">Made with endless care — A23</div>
     </div>
   </div>
 
-  <!-- Grateful Section -->
   <section class="section" id="readySection">
     <div class="card" id="readyCard">
       <div class="planet-scene">
@@ -282,7 +236,6 @@
         <div class="planet">🪐</div>
         <div class="rocket">🚀</div>
       </div>
-
       <div class="grateful-msg">
         <h2 class="grateful-title">She became mine. 🌙</h2>
         <p class="grateful-text">
@@ -292,27 +245,16 @@
         </p>
         <p class="grateful-sub">✨ You are the best thing that's ever been mine. ❤️ ✨</p>
       </div>
-
       <div class="distance-widget">
-        <div class="distance-city">
-          <span class="city-dot"></span>
-          <span class="city-name">Al Khobar</span>
-        </div>
-        <div class="distance-track">
-          <div class="distance-line"></div>
-          <div class="distance-plane">✈️</div>
-          <div class="distance-label">380 km</div>
-        </div>
-        <div class="distance-city">
-          <span class="city-dot city-dot--end"></span>
-          <span class="city-name">Riyadh</span>
-        </div>
+        <div class="distance-city"><span class="city-dot"></span><span class="city-name">Al Khobar</span></div>
+        <div class="distance-track"><div class="distance-line"></div><div class="distance-plane">✈️</div><div class="distance-label">380 km</div></div>
+        <div class="distance-city"><span class="city-dot city-dot--end"></span><span class="city-name">Riyadh</span></div>
       </div>
     </div>
   </section>
 
   <div class="notebook">
-    <div class="title">📖 Memo for you 📖</div>
+    <div class="title">📖 Memorize my words 📖</div>
     <textarea id="memo" placeholder="Write whatever you feel... I'm listening."></textarea>
     <button id="saveMemo">💾 Save</button>
     <div class="memo-hint">Saved only on this device — your private space</div>
@@ -320,43 +262,33 @@
 
   <div class="since"><strong id="sinceCounter">—</strong></div>
 
-  <!-- Mood Toy -->
-  <div class="mood-toy glass" id="moodToy" role="button" aria-pressed="false" title="Tap to share your mood">
+  <div class="mood-toy" id="moodToy">
     <div class="toy-label" id="toyLabel">💭 My Mood</div>
     <div class="toy-figure">
-      <svg viewBox="0 0 200 200" width="70" height="70" class="toy-svg">
-        <circle id="head" cx="100" cy="100" r="65" fill="#FFE5B4" stroke="#D4A373" stroke-width="3"/>
-        
-        <!-- Happy Face -->
+      <svg viewBox="0 0 200 200" class="toy-svg">
+        <circle cx="100" cy="100" r="65" fill="#FFE5B4" stroke="#D4A373" stroke-width="3"/>
         <g class="face-happy">
           <circle cx="70" cy="85" r="8" fill="#5D3A1A"/>
           <circle cx="130" cy="85" r="8" fill="#5D3A1A"/>
           <circle cx="70" cy="88" r="3" fill="white"/>
           <circle cx="130" cy="88" r="3" fill="white"/>
           <path d="M70 125 Q100 150 130 125" fill="none" stroke="#5D3A1A" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="55" cy="105" r="5" fill="#FFB7C5" opacity="0.7"/>
-          <circle cx="145" cy="105" r="5" fill="#FFB7C5" opacity="0.7"/>
         </g>
-        
-        <!-- Sad Face -->
         <g class="face-sad">
           <circle cx="72" cy="88" r="8" fill="#5D3A1A"/>
           <circle cx="128" cy="88" r="8" fill="#5D3A1A"/>
           <circle cx="72" cy="91" r="3" fill="white"/>
           <circle cx="128" cy="91" r="3" fill="white"/>
           <path d="M75 128 Q100 115 125 128" fill="none" stroke="#5D3A1A" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="62" cy="110" r="4" fill="#87CEEB" opacity="0.8"/>
-          <circle cx="138" cy="110" r="4" fill="#87CEEB" opacity="0.8"/>
           <path d="M95 72 L100 78 L105 72" fill="none" stroke="#5D3A1A" stroke-width="3"/>
         </g>
       </svg>
     </div>
   </div>
 
-  <!-- ===== All Scripts ===== -->
   <script>
-    /* Rotating Lines */
-    let lines=[
+    // Rotating Lines
+    let lines = [
       "If anything feels heavy today, hand it to me — I'll carry it with you.",
       "No matter what, you're not facing this alone.",
       "I'm proud of you, even on the days you can't see it.",
@@ -368,182 +300,165 @@
       "I choose you on the bright days and the stormy ones.",
       "You and I — team forever."
     ];
-    let idx=0;
-    const lineEl=document.getElementById('line');
-    const dotsEl=document.getElementById('dots');
-    lines.forEach((_,i)=>{ const d=document.createElement('div'); d.className='dot'+(i===0?' active':''); dotsEl.appendChild(d); });
-    function renderLine(t){ lineEl.innerHTML=''; const s=document.createElement('span'); s.textContent=t; lineEl.appendChild(s); }
-    function setActiveDot(i){ Array.from(dotsEl.children).forEach((d,k)=>d.classList.toggle('active',k===i)); }
-    function nextLine(){ renderLine(lines[idx]); setActiveDot(idx); idx=(idx+1)%lines.length; }
-    nextLine(); setInterval(nextLine,2800);
+    let idx = 0;
+    const lineEl = document.getElementById('line');
+    const dotsEl = document.getElementById('dots');
+    lines.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); dotsEl.appendChild(d); });
+    function renderLine(t) { lineEl.innerHTML = ''; const s = document.createElement('span'); s.textContent = t; lineEl.appendChild(s); }
+    function setActiveDot(i) { Array.from(dotsEl.children).forEach((d, k) => d.classList.toggle('active', k === i)); }
+    function nextLine() { renderLine(lines[idx]); setActiveDot(idx); idx = (idx + 1) % lines.length; }
+    nextLine(); setInterval(nextLine, 2800);
 
-    /* Stars */
-    const starsEl=document.getElementById('stars');
-    for(let i=0;i<100;i++){
-      const s=document.createElement('div'); s.className='star';
-      s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
-      s.style.animationDelay=(Math.random()*8).toFixed(2)+'s';
-      s.style.animationDuration=(4+Math.random()*5).toFixed(2)+'s';
-      starsEl.appendChild(s);
+    // Stars
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div'); s.className = 'star';
+      s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = (Math.random() * 8).toFixed(2) + 's';
+      document.getElementById('stars').appendChild(s);
     }
 
-    /* Hearts */
-    const heartsEl=document.getElementById('hearts');
-    function spawnHeart(){
-      const h=document.createElement('div'); h.className='heart';
-      h.style.left=Math.random()*100+'vw'; h.style.bottom='-20px';
-      h.style.animationDuration=(8+Math.random()*6).toFixed(2)+'s';
-      h.style.animationDelay=(Math.random()*3).toFixed(2)+'s';
-      heartsEl.appendChild(h); setTimeout(()=>h.remove(),12000);
-    }
-    setInterval(spawnHeart,600);
+    // Hearts
+    setInterval(() => {
+      const h = document.createElement('div'); h.className = 'heart';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = (8 + Math.random() * 6).toFixed(2) + 's';
+      document.getElementById('hearts').appendChild(h);
+      setTimeout(() => h.remove(), 12000);
+    }, 700);
 
-    /* Confetti */
-    document.getElementById('confettiBtn').addEventListener('click',(e)=>{
+    // Confetti
+    document.getElementById('confettiBtn').addEventListener('click', (e) => {
       e.preventDefault();
-      for(let i=0;i<150;i++) makeParticle();
+      for (let i = 0; i < 120; i++) {
+        const p = document.createElement('div');
+        p.style.cssText = `position:fixed;width:7px;height:10px;z-index:9999;pointer-events:none;left:${window.innerWidth / 2 + (Math.random() * 80 - 40)}px;top:${window.innerHeight / 2 + (Math.random() * 30 - 15)}px;background:${['#ff4d6d', '#ffd166', '#06d6a0', '#4cc9f0', '#f72585'][Math.floor(Math.random() * 5)]};border-radius:2px;`;
+        document.body.appendChild(p);
+        let dx = (Math.random() - 0.5) * 12, dy = (Math.random() - 0.9) * 14, x = 0, y = 0, life = 0;
+        const t = setInterval(() => {
+          life++; x += dx; y += dy + life * 0.1;
+          p.style.transform = `translate(${x}px,${y}px) rotate(${life * 12}deg)`;
+          p.style.opacity = 0.9 - life / 70;
+          if (life > 70) { clearInterval(t); p.remove(); }
+        }, 16);
+      }
     });
-    function makeParticle(){
-      const p=document.createElement('div');
-      p.style.cssText=`position:fixed;width:8px;height:12px;z-index:9999;pointer-events:none;`;
-      p.style.left=(window.innerWidth/2)+(Math.random()*80-40)+'px';
-      p.style.top=(window.innerHeight/2)+(Math.random()*30-15)+'px';
-      p.style.background=['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585','#ffffff'][Math.floor(Math.random()*6)];
-      p.style.borderRadius='2px';
-      p.style.transform='rotate('+(Math.random()*360)+'deg)';
-      document.body.appendChild(p);
-      const dx=(Math.random()-0.5)*14, dy=(Math.random()-0.9)*16; let x=0,y=0,life=0;
-      const t=setInterval(()=>{
-        life++; x+=dx; y+=dy+life*0.12;
-        p.style.transform=`translate(${x}px,${y}px) rotate(${life*15}deg)`;
-        p.style.opacity=String(0.95-life/80);
-        if(life>80){ clearInterval(t); p.remove(); }
-      },16);
+
+    // Memo
+    const memo = document.getElementById('memo');
+    const saveMemo = document.getElementById('saveMemo');
+    try { memo.value = localStorage.getItem('memo_lojain') || ''; } catch(e) {}
+    saveMemo.addEventListener('click', () => {
+      try { localStorage.setItem('memo_lojain', memo.value); saveMemo.textContent = '✓ Saved!'; setTimeout(() => saveMemo.textContent = '💾 Save', 1500); } catch(e) {}
+    });
+
+    // Since Counter
+    function updateSince() {
+      const start = new Date('2025-03-21T06:09:00');
+      const diff = Math.max(0, Date.now() - start);
+      const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('sinceCounter').innerHTML = `✨ Since we met: ${d}d ${h}h ${m}m ${s}s ✨`;
     }
+    updateSince(); setInterval(updateSince, 1000);
 
-    /* Memo */
-    const memo=document.getElementById('memo');
-    const saveMemo=document.getElementById('saveMemo');
-    try{ memo.value=localStorage.getItem('memo_lojain')||''; }catch(e){}
-    saveMemo.addEventListener('click',()=>{
-      try{ localStorage.setItem('memo_lojain',memo.value); saveMemo.textContent='✓ Saved!'; setTimeout(()=>saveMemo.textContent='💾 Save',1500); }catch(e){}
-    });
+    // Smooth Scroll
+    document.getElementById('downLink').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('readySection').scrollIntoView({ behavior: 'smooth' }); });
 
-    /* Since Counter */
-    function updateSince(){
-      const el=document.getElementById('sinceCounter'); if(!el) return;
-      const startDate=new Date('2025-03-21T06:09:00');
-      const diff=Math.max(0,Date.now()-startDate.getTime());
-      const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000),
-            m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
-      el.innerHTML=`✨ Since we met: ${d}d ${h}h ${m}m ${s}s ✨`;
-    }
-    updateSince(); setInterval(updateSince,1000);
-  </script>
+    // Mood Toy Sync - FULLY WORKING
+    (function() {
+      const toy = document.getElementById('moodToy');
+      const label = document.getElementById('toyLabel');
+      if (!toy) return;
+      
+      const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
+      const COUPLE_ID = 'lojain_a23';
+      const STORAGE_KEY = 'lojain_mood';
 
-  <!-- Smooth Scroll -->
-  <script>
-  (function(){
-    const link=document.getElementById('downLink');
-    const target=document.getElementById('readySection');
-    if(!link||!target) return;
-    link.addEventListener('click',(e)=>{
-      e.preventDefault();
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-    });
-  })();
-  </script>
+      function updateUI(mood) {
+        console.log('Updating UI to:', mood);
+        if (mood === 'sad') {
+          toy.classList.add('sad');
+          toy.classList.remove('happy');
+          label.innerHTML = '😢 Mood: Sad';
+          // تغيير لون الوجه
+          const head = toy.querySelector('#head');
+          if (head) head.setAttribute('fill', '#d0e1ff');
+        } else {
+          toy.classList.add('happy');
+          toy.classList.remove('sad');
+          label.innerHTML = '😊 Mood: Happy';
+          // تغيير لون الوجه
+          const head = toy.querySelector('#head');
+          if (head) head.setAttribute('fill', '#ffcfdf');
+        }
+      }
 
-  <!-- Mood Toy Sync - Fixed Version -->
-  <script>
-  (function(){
-    const toy = document.getElementById('moodToy');
-    const labelEl = document.getElementById('toyLabel');
-    if(!toy || !labelEl) return;
-
-    const COUPLE_ID = 'lojain_a23';
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
-    const STORAGE_KEY = 'lojain_mood';
-
-    function updateMoodUI(state) {
-      const isSad = (state === 'sad');
-      if(isSad) {
-        toy.classList.add('sad');
-        toy.classList.remove('happy');
-        labelEl.innerHTML = '😢 Mood: Sad';
+      // تحميل الحالة المخزنة محلياً
+      const cached = localStorage.getItem(STORAGE_KEY);
+      if (cached === 'sad' || cached === 'happy') {
+        updateUI(cached);
       } else {
-        toy.classList.add('happy');
-        toy.classList.remove('sad');
-        labelEl.innerHTML = '😊 Mood: Happy';
+        updateUI('happy');
       }
-    }
 
-    const cachedMood = localStorage.getItem(STORAGE_KEY);
-    if(cachedMood && (cachedMood === 'happy' || cachedMood === 'sad')) {
-      updateMoodUI(cachedMood);
-    } else {
-      updateMoodUI('happy');
-    }
+      async function fetchMood() {
+        try {
+          console.log('Fetching mood from server...');
+          const res = await fetch(`${API_URL}?action=get&id=${COUPLE_ID}&t=${Date.now()}`);
+          const data = await res.json();
+          console.log('Server response:', data);
+          if (data.success && data.mood) {
+            localStorage.setItem(STORAGE_KEY, data.mood);
+            updateUI(data.mood);
+          }
+        } catch(error) {
+          console.log('Fetch failed, using cached mood');
+        }
+      }
 
-    async function fetchRemoteMood() {
-      try {
-        const url = `${API_URL}?action=get&id=${encodeURIComponent(COUPLE_ID)}&t=${Date.now()}`;
-        const response = await fetch(url);
-        if(!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        const mood = data.mood || data.state || 'happy';
-        if(mood === 'sad' || mood === 'happy') {
+      async function updateMood(mood) {
+        try {
+          console.log('Updating mood to:', mood);
           localStorage.setItem(STORAGE_KEY, mood);
-          updateMoodUI(mood);
+          updateUI(mood);
+          const response = await fetch(`${API_URL}?action=set&id=${COUPLE_ID}&mood=${mood}&t=${Date.now()}`);
+          const result = await response.json();
+          console.log('Update response:', result);
+          
+          // إظهار تأثير مؤقت
+          label.style.opacity = '0.6';
+          setTimeout(() => { label.style.opacity = '1'; }, 200);
+        } catch(error) {
+          console.log('Update failed:', error);
         }
-      } catch(error) {
-        console.warn('Fetch failed, using cached mood');
       }
-    }
 
-    async function updateRemoteMood(state) {
-      try {
-        localStorage.setItem(STORAGE_KEY, state);
-        updateMoodUI(state);
-        const url = `${API_URL}?action=set&id=${encodeURIComponent(COUPLE_ID)}&mood=${encodeURIComponent(state)}&t=${Date.now()}`;
-        await fetch(url);
-        
-        labelEl.style.opacity = '0.6';
-        setTimeout(() => { labelEl.style.opacity = '1'; }, 200);
-      } catch(error) {
-        console.error('Update failed:', error);
-        const originalText = labelEl.innerHTML;
-        labelEl.innerHTML = '⚠️ Offline';
-        setTimeout(() => { labelEl.innerHTML = originalText; }, 1500);
-      }
-    }
-
-    toy.addEventListener('click', () => {
-      const isCurrentlySad = toy.classList.contains('sad');
-      const newMood = isCurrentlySad ? 'happy' : 'sad';
-      updateRemoteMood(newMood);
-    });
-
-    fetchRemoteMood();
-    setInterval(fetchRemoteMood, 8000);
-  })();
-  </script>
-
-  <!-- Intersection Observer for Ready Card -->
-  <script>
-  (function(){
-    const card = document.getElementById('readyCard');
-    if(!card) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting) {
-          card.classList.add('show');
-          observer.disconnect();
-        }
+      // عند الضغط على الوجه
+      toy.addEventListener('click', () => {
+        const isSad = toy.classList.contains('sad');
+        const newMood = isSad ? 'happy' : 'sad';
+        updateMood(newMood);
       });
-    }, { threshold: 0.2 });
-    observer.observe(card);
-  })();
+
+      // جلب الحالة من السيرفر عند بدء التشغيل
+      fetchMood();
+      
+      // مزامنة كل 5 ثواني
+      setInterval(fetchMood, 5000);
+    })();
+
+    // Intersection Observer for readyCard
+    const readyCard = document.getElementById('readyCard');
+    if (readyCard) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            readyCard.classList.add('show');
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(readyCard);
+    }
   </script>
 </body>
 </html>
