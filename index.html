@@ -2,49 +2,244 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lojain — A23</title>
   <link rel="manifest" href="manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=5">
-
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  
   <style>
-    :root { --vh: 1vh; }
-    .wrap { min-height: 100svh; min-height: calc(var(--vh) * 100); padding: 16px; }
-    .card { max-width: 92vw; margin: 0 auto; border-radius: 14px; }
-    .cta, button, .down {
-      display: inline-block; width: 100%; max-width: 520px;
-      padding: 12px 16px; font-size: 16px; border-radius: 12px; touch-action: manipulation;
+    :root {
+      --bg1: #0f1020;
+      --bg2: #1b1e3a;
+      --accent: #ff4d6d;
+      --accent-glow: rgba(255, 77, 109, 0.4);
+      --text: #f7f7ff;
+      --muted: #cfd3ff;
+      --glass: rgba(255, 255, 255, .03);
+      --glass-bd: rgba(255, 255, 255, .08);
+      --ring: #ffffff33;
+      --ring-strong: #ffffff66;
+      --shadow: 0 10px 40px rgba(0, 0, 0, .35);
+      --happy-glow: rgba(255, 200, 100, 0.3);
+      --sad-glow: rgba(100, 150, 255, 0.3);
     }
-    @media (max-width: 480px) {
-      h1 { font-size: 28px; }
-      .subtitle { font-size: 14px; line-height: 1.5; }
-      .breath-steps { font-size: 13px; }
-      .footer { font-size: 12px; }
-      #sinceCounter { font-size: 13px; }
+
+    /* ===== Base ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%; margin: 0;
+      font-family: 'Tajawal', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px circle at 20% 10%, rgba(255, 77, 109, .07), transparent 40%),
+        radial-gradient(1000px circle at 90% 80%, rgba(207, 211, 255, .08), transparent 45%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      overflow-x: hidden;
+      overflow-y: auto;
     }
-    .stars, .hearts { pointer-events: none; }
-    .wrap, .section, .notebook { padding-bottom: 240px; }
-    .since {
-      position: fixed !important; right: 16px; left: auto !important;
-      transform: none !important;
-      bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 7;
+    html { scroll-behavior: smooth; }
+    .glass { background: var(--glass); border: 1px solid var(--glass-bd); backdrop-filter: blur(8px); }
+
+    /* ===== Background particles ===== */
+    .stars, .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .star { position: absolute; width: 2px; height: 2px; background: rgba(255, 255, 255, .8); border-radius: 50%; opacity: 0; animation: twinkle 6s linear infinite; }
+    @keyframes twinkle { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 50% { opacity: .6; } 100% { transform: translateY(40px); opacity: 0; } }
+    .heart { position: absolute; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); border-radius: 2px; opacity: .8; animation: float 10s linear infinite; }
+    .heart::before, .heart::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; }
+    .heart::before { top: -6px; left: 0; } .heart::after { left: -6px; top: 0; }
+    @keyframes float { 0% { transform: translateY(0) rotate(45deg) scale(1); opacity: 0; } 10% { opacity: .7; } 50% { transform: translateY(-55vh) rotate(45deg) scale(1.15); } 100% { transform: translateY(-110vh) rotate(45deg) scale(1.3); opacity: 0; } }
+
+    /* ===== Layout ===== */
+    .wrap { position: relative; z-index: 3; min-height: 100%; display: grid; place-items: center; padding: 24px; text-align: center; padding-bottom: 260px; }
+    .card { background: var(--glass); border: 1px solid var(--glass-bd); box-shadow: var(--shadow); border-radius: 28px; padding: 32px 28px; max-width: 760px; width: 100%; backdrop-filter: blur(12px); }
+    h1 { margin: 0 0 12px 0; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; }
+    .subtitle { margin: 0 0 24px 0; font-size: 17px; color: var(--muted); line-height: 1.5; }
+    .footer { margin-top: 24px; font-size: 13px; color: var(--muted); opacity: 0.7; }
+
+    /* ===== Rotating lines ===== */
+    .line { min-height: 120px; display: grid; place-items: center; font-size: 22px; font-weight: 700; line-height: 1.5; padding: 16px 8px; background: rgba(255,255,255,0.02); border-radius: 20px; margin: 8px 0; }
+    .line span { display: inline-block; opacity: 0; transform: translateY(12px) scale(.98); filter: blur(6px); animation: in 800ms ease forwards; }
+    @keyframes in { to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+    .dots { margin-top: 16px; display: flex; justify-content: center; gap: 10px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .2); transition: all 0.3s ease; }
+    .dot.active { background: var(--accent); transform: scale(1.2); box-shadow: 0 0 8px var(--accent); }
+
+    /* ===== Buttons ===== */
+    .cta, .down {
+      display: block; padding: 14px 22px; border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, .2); text-decoration: none;
+      color: var(--text) !important; font-weight: 700; font-size: 15px;
+      background: rgba(255, 255, 255, .06);
+      transition: all .2s ease;
+      text-align: center; cursor: pointer;
+      width: 100%; max-width: 520px; margin: 12px auto; box-sizing: border-box;
+      backdrop-filter: blur(4px);
     }
+    .cta:hover, .down:hover {
+      background: rgba(255, 255, 255, .12); transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.3), 0 0 0 2px var(--ring);
+      border-color: var(--accent);
+    }
+
+    /* ===== Mood Toy - Enhanced ===== */
     .mood-toy {
-      position: fixed; right: 16px;
-      bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 8;
+      position: fixed; right: 20px; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); z-index: 100;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; 
+      padding: 16px 20px; border-radius: 60px;
+      background: rgba(20, 22, 45, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .notebook {
-      display: block !important; position: relative; z-index: 2;
-      max-width: 720px; margin: 24px auto; padding: 12px;
+    .mood-toy:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); }
+    .mood-toy:active { transform: scale(0.98); }
+    
+    .toy-label { 
+      font-size: 14px; font-weight: 800; 
+      background: linear-gradient(135deg, #fff, var(--muted));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 0.5px;
     }
-    #memo { width: 100%; box-sizing: border-box; min-height: 160px; resize: vertical; }
-    #readyCard { position: relative; z-index: 2; }
+    
+    .toy-figure { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+    .toy-svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); transition: all 0.3s ease; }
+    
+    /* Face styles */
+    .face-happy, .face-sad { transition: opacity 0.3s ease; }
+    .mood-toy.happy .face-sad { display: none; }
+    .mood-toy.sad .face-happy { display: none; }
+    
+    /* Happy mood glow */
+    .mood-toy.happy {
+      border-color: rgba(255, 200, 100, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 200, 100, 0.3);
+    }
+    .mood-toy.happy .toy-svg {
+      filter: drop-shadow(0 0 12px rgba(255, 200, 100, 0.6));
+    }
+    
+    /* Sad mood glow */
+    .mood-toy.sad {
+      border-color: rgba(100, 150, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(100, 150, 255, 0.3);
+    }
+    .mood-toy.sad .toy-svg {
+      filter: drop-shadow(0 0 12px rgba(100, 150, 255, 0.6));
+    }
+
+    /* ===== Since Widget ===== */
+    .since {
+      position: fixed !important; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      z-index: 9; background: rgba(15, 16, 32, 0.7); border: 1px solid var(--glass-bd);
+      backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 40px; font-size: 12px;
+      font-weight: 500; letter-spacing: 0.3px;
+    }
+
+    /* ===== Notebook ===== */
+    .notebook { max-width: 720px; margin: 32px auto; position: relative; padding: 0 20px; }
+    .title { font-size: 20px; font-weight: 800; margin-bottom: 12px; text-align: center; color: var(--muted); }
+    #memo { width: 100%; border-radius: 20px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-bd); padding: 16px; font-family: inherit; font-size: 15px; resize: vertical; transition: all 0.3s; }
+    #memo:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
+    button { background: linear-gradient(135deg, rgba(255,77,109,0.8), rgba(255,77,109,0.4)); border: none; color: white; font-weight: bold; cursor: pointer; transition: all 0.2s; padding: 12px 24px; border-radius: 40px; font-size: 15px; margin-top: 12px; width: 100%; max-width: 200px; margin-left: auto; margin-right: auto; display: block; }
+    button:active { transform: scale(0.97); }
+    .memo-hint { font-size: 11px; color: #888; margin-top: 12px; text-align: center; }
+
+    /* ===== Breathe Circle ===== */
+    .breathe { margin: 32px 0 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .circle {
+      width: 80px !important; height: 80px !important; min-width: 80px; min-height: 80px;
+      border: 3px solid var(--accent); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      animation: breathe 14s infinite ease-in-out; flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(255,77,109,0.3);
+    }
+    .circle-inner { width: 16px; height: 16px; background: var(--accent); border-radius: 50%; pointer-events: none; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.3); opacity: 1; } }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      28% { transform: scale(1.5); opacity: 1; }
+      57% { transform: scale(1.5); opacity: 1; }
+    }
+    .breath-steps { font-size: 13px; color: var(--muted); opacity: 0.9; text-align: center; font-weight: 500; }
+
+    /* ===== Support Section ===== */
+    .support { text-align: center; padding: 20px 8px; }
+    .support h3 { font-size: 20px; font-weight: 800; margin: 0 0 20px 0; color: var(--text); }
+    .support p { font-size: 16px; line-height: 2; color: var(--muted); margin: 10px 0; text-align: center; }
+
+    /* ===== Section ===== */
+    .section { position: relative; z-index: 2; padding: 20px 16px 200px; }
+
+    /* ===== Grateful / Ready Card ===== */
+    #readyCard {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 28px; text-align: center; padding: 40px 28px;
+      opacity: 0; transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    #readyCard.show { opacity: 1; transform: translateY(0); }
+
+    /* ===== Planet Scene ===== */
+    .planet-scene {
+      position: relative; width: 160px; height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto;
+    }
+    .orbit-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      animation: spin-ring 16s linear infinite;
+    }
+    @keyframes spin-ring { to { transform: rotate(360deg); } }
+    .planet { font-size: 58px; z-index: 2; line-height: 1; animation: planet-bob 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(255, 77, 109, 0.5)); }
+    @keyframes planet-bob { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.08) rotate(5deg); } }
+    .rocket { position: absolute; font-size: 22px; top: -5px; left: 50%; transform-origin: 0 85px; animation: rocket-orbit 8s linear infinite; }
+    @keyframes rocket-orbit { to { transform: translateX(-50%) rotate(360deg); } }
+
+    /* ===== Grateful Message ===== */
+    .grateful-msg { max-width: 520px; }
+    .grateful-title { font-size: 26px; font-weight: 900; margin: 0 0 16px 0; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .grateful-text { font-size: 16px; line-height: 1.9; color: var(--muted); margin: 0 0 12px 0; }
+    .grateful-sub { font-size: 15px; color: var(--accent); font-weight: 800; margin: 8px 0 0; letter-spacing: 0.3px; }
+
+    /* ===== Distance Widget ===== */
+    .distance-widget {
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-bd);
+      border-radius: 60px; padding: 16px 24px;
+      width: 100%; max-width: 460px;
+    }
+    .distance-city { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 70px; }
+    .city-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: city-pulse 2s ease-in-out infinite; }
+    .city-dot--end { background: #cfd3ff; box-shadow: 0 0 12px #cfd3ff; }
+    @keyframes city-pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.4); opacity: 1; } }
+    .city-name { font-size: 13px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+    .distance-track { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+    .distance-line { width: 100%; height: 3px; background: linear-gradient(90deg, var(--accent), rgba(207,211,255,0.6)); border-radius: 3px; }
+    .distance-plane { font-size: 20px; animation: fly 3s ease-in-out infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    @keyframes fly { 0% { transform: translateX(-35px) scaleX(1); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(35px) scaleX(1); opacity: 0; } }
+    .distance-label { font-size: 20px; font-weight: 900; color: var(--text); letter-spacing: 1px; }
+
+    /* ===== Mobile Responsive ===== */
     @media (max-width: 600px) {
-      .card { max-width: 94vw; }
-      .notebook { max-width: 94vw; margin: 20px auto; }
-      .mood-toy { right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
-      .since { right: 12px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+      .mood-toy { right: 12px; bottom: 95px; padding: 12px 16px; }
+      .mood-toy .toy-figure { width: 55px; height: 55px; }
+      .since { right: 12px; bottom: 18px; font-size: 10px; padding: 6px 12px; }
+      .wrap { padding: 16px; padding-bottom: 260px; }
+      .card { padding: 24px 20px; }
+      h1 { font-size: 28px; }
+      .line { font-size: 18px; min-height: 100px; }
+      .distance-widget { padding: 12px 16px; gap: 10px; }
+      .distance-label { font-size: 16px; }
+      .distance-plane { font-size: 16px; }
+      .city-name { font-size: 11px; }
+      .grateful-title { font-size: 22px; }
+      .support p { font-size: 14px; line-height: 1.7; }
     }
   </style>
 </head>
@@ -59,11 +254,11 @@
       <p class="subtitle">If you ever feel overwhelmed, open this page. I'm here — always. — A23</p>
       <div class="line" id="line"></div>
       <div class="dots" id="dots" aria-hidden="true"></div>
-      <a class="cta" href="#" id="confettiBtn" title="Tap">A small touch of love</a>
-      <a id="downLink" class="down" href="#readySection">↓ Scroll when you're ready</a>
+      <a class="cta" href="#" id="confettiBtn" title="Tap">✨ A small touch of love ✨</a>
+      <a id="downLink" class="down" href="#readySection">↓ Scroll when you're ready ↓</a>
 
       <div class="support">
-        <h3>Read this slowly whenever you need it</h3>
+        <h3>💫 Read this slowly whenever you need it 💫</h3>
         <p>• You're not alone. I'm with you — now and forever.</p>
         <p>• Whatever happened, we'll face it together. One step at a time.</p>
         <p>• You are loved, you are safe, and your feelings matter to me.</p>
@@ -71,26 +266,23 @@
 
         <div class="breathe">
           <div class="circle"><div class="circle-inner"></div></div>
-          <div class="breath-steps">Inhale 4 • Hold 4 • Exhale 6 — repeat</div>
+          <div class="breath-steps">🌬️ Inhale 4 • Hold 4 • Exhale 6 — repeat 🌬️</div>
         </div>
       </div>
 
-      <div class="footer">Made with care — A23</div>
+      <div class="footer">Made with endless care — A23</div>
     </div>
   </div>
 
-  <!-- ===== Grateful Section (replaces ready section) ===== -->
+  <!-- Grateful Section -->
   <section class="section" id="readySection">
     <div class="card" id="readyCard">
-
-      <!-- Planet + Orbit -->
       <div class="planet-scene">
         <div class="orbit-ring"></div>
         <div class="planet">🪐</div>
         <div class="rocket">🚀</div>
       </div>
 
-      <!-- Grateful Message -->
       <div class="grateful-msg">
         <h2 class="grateful-title">She became mine. 🌙</h2>
         <p class="grateful-text">
@@ -98,10 +290,9 @@
           Out of everyone in this world, you chose me.<br>
           And I am endlessly, deeply grateful that you did.
         </p>
-        <p class="grateful-sub">You are the best thing that's ever been mine. ❤️</p>
+        <p class="grateful-sub">✨ You are the best thing that's ever been mine. ❤️ ✨</p>
       </div>
 
-      <!-- Distance Widget -->
       <div class="distance-widget">
         <div class="distance-city">
           <span class="city-dot"></span>
@@ -117,44 +308,52 @@
           <span class="city-name">Riyadh</span>
         </div>
       </div>
-
     </div>
   </section>
 
   <div class="notebook">
-    <div class="title">Memo</div>
-    <textarea id="memo" placeholder="Write in the book…"></textarea>
-    <button id="saveMemo">Save</button>
-    <div class="memo-hint">Saved only on this device</div>
+    <div class="title">📖 Memo for you 📖</div>
+    <textarea id="memo" placeholder="Write whatever you feel... I'm listening."></textarea>
+    <button id="saveMemo">💾 Save</button>
+    <div class="memo-hint">Saved only on this device — your private space</div>
   </div>
 
   <div class="since"><strong id="sinceCounter">—</strong></div>
 
   <!-- Mood Toy -->
-  <div class="mood-toy glass" id="moodToy" role="button" aria-pressed="false" title="Click to toggle mood">
-    <div class="toy-label" id="toyLabel">Click me</div>
-    <div class="toy-figure" id="toyFigure" aria-hidden="true">
-      <svg viewBox="0 0 200 200" width="120" height="120" class="toy-svg" aria-hidden="true">
-        <circle id="head" cx="100" cy="90" r="57" />
-        <g class="face face-happy">
-          <circle cx="80" cy="85" r="6" fill="#222"/>
-          <circle cx="120" cy="85" r="6" fill="#222"/>
-          <path d="M75 105 Q100 122 125 105" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="65" cy="100" r="6" fill="#ff9dbd" opacity=".55"/>
-          <circle cx="135" cy="100" r="6" fill="#ff9dbd" opacity=".55"/>
+  <div class="mood-toy glass" id="moodToy" role="button" aria-pressed="false" title="Tap to share your mood">
+    <div class="toy-label" id="toyLabel">💭 My Mood</div>
+    <div class="toy-figure">
+      <svg viewBox="0 0 200 200" width="70" height="70" class="toy-svg">
+        <circle id="head" cx="100" cy="100" r="65" fill="#FFE5B4" stroke="#D4A373" stroke-width="3"/>
+        
+        <!-- Happy Face -->
+        <g class="face-happy">
+          <circle cx="70" cy="85" r="8" fill="#5D3A1A"/>
+          <circle cx="130" cy="85" r="8" fill="#5D3A1A"/>
+          <circle cx="70" cy="88" r="3" fill="white"/>
+          <circle cx="130" cy="88" r="3" fill="white"/>
+          <path d="M70 125 Q100 150 130 125" fill="none" stroke="#5D3A1A" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="55" cy="105" r="5" fill="#FFB7C5" opacity="0.7"/>
+          <circle cx="145" cy="105" r="5" fill="#FFB7C5" opacity="0.7"/>
         </g>
-        <g class="face face-sad">
-          <circle cx="85" cy="85" r="5" fill="#222" />
-          <circle cx="115" cy="85" r="5" fill="#222" />
-          <path d="M85 110 Q100 100 115 110" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" />
-          <circle cx="85" cy="95" r="2" fill="#add8e6" opacity="0.8" />
+        
+        <!-- Sad Face -->
+        <g class="face-sad">
+          <circle cx="72" cy="88" r="8" fill="#5D3A1A"/>
+          <circle cx="128" cy="88" r="8" fill="#5D3A1A"/>
+          <circle cx="72" cy="91" r="3" fill="white"/>
+          <circle cx="128" cy="91" r="3" fill="white"/>
+          <path d="M75 128 Q100 115 125 128" fill="none" stroke="#5D3A1A" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="62" cy="110" r="4" fill="#87CEEB" opacity="0.8"/>
+          <circle cx="138" cy="110" r="4" fill="#87CEEB" opacity="0.8"/>
+          <path d="M95 72 L100 78 L105 72" fill="none" stroke="#5D3A1A" stroke-width="3"/>
         </g>
       </svg>
     </div>
   </div>
 
-  <!-- ===== Scripts ===== -->
-
+  <!-- ===== All Scripts ===== -->
   <script>
     /* Rotating Lines */
     let lines=[
@@ -176,15 +375,15 @@
     function renderLine(t){ lineEl.innerHTML=''; const s=document.createElement('span'); s.textContent=t; lineEl.appendChild(s); }
     function setActiveDot(i){ Array.from(dotsEl.children).forEach((d,k)=>d.classList.toggle('active',k===i)); }
     function nextLine(){ renderLine(lines[idx]); setActiveDot(idx); idx=(idx+1)%lines.length; }
-    nextLine(); setInterval(nextLine,2600);
+    nextLine(); setInterval(nextLine,2800);
 
     /* Stars */
     const starsEl=document.getElementById('stars');
-    for(let i=0;i<80;i++){
+    for(let i=0;i<100;i++){
       const s=document.createElement('div'); s.className='star';
       s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
-      s.style.animationDelay=(Math.random()*6).toFixed(2)+'s';
-      s.style.opacity=(0.3+Math.random()*0.7).toFixed(2);
+      s.style.animationDelay=(Math.random()*8).toFixed(2)+'s';
+      s.style.animationDuration=(4+Math.random()*5).toFixed(2)+'s';
       starsEl.appendChild(s);
     }
 
@@ -193,49 +392,51 @@
     function spawnHeart(){
       const h=document.createElement('div'); h.className='heart';
       h.style.left=Math.random()*100+'vw'; h.style.bottom='-20px';
-      h.style.animationDuration=(8+Math.random()*5).toFixed(2)+'s';
-      h.style.opacity=(0.5+Math.random()*0.5).toFixed(2);
+      h.style.animationDuration=(8+Math.random()*6).toFixed(2)+'s';
+      h.style.animationDelay=(Math.random()*3).toFixed(2)+'s';
       heartsEl.appendChild(h); setTimeout(()=>h.remove(),12000);
     }
-    setInterval(spawnHeart,700);
+    setInterval(spawnHeart,600);
 
     /* Confetti */
     document.getElementById('confettiBtn').addEventListener('click',(e)=>{
       e.preventDefault();
-      for(let i=0;i<120;i++) makeParticle();
+      for(let i=0;i<150;i++) makeParticle();
     });
     function makeParticle(){
       const p=document.createElement('div');
-      p.style.cssText=`position:fixed;width:6px;height:10px;z-index:9999;`;
-      p.style.left=(window.innerWidth/2)+(Math.random()*60-30)+'px';
-      p.style.top=(window.innerHeight/2)+(Math.random()*20-10)+'px';
-      p.style.background=['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585'][Math.floor(Math.random()*5)];
+      p.style.cssText=`position:fixed;width:8px;height:12px;z-index:9999;pointer-events:none;`;
+      p.style.left=(window.innerWidth/2)+(Math.random()*80-40)+'px';
+      p.style.top=(window.innerHeight/2)+(Math.random()*30-15)+'px';
+      p.style.background=['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585','#ffffff'][Math.floor(Math.random()*6)];
+      p.style.borderRadius='2px';
       p.style.transform='rotate('+(Math.random()*360)+'deg)';
       document.body.appendChild(p);
-      const dx=(Math.random()-0.5)*12, dy=(Math.random()-0.9)*14; let x=0,y=0,life=0;
+      const dx=(Math.random()-0.5)*14, dy=(Math.random()-0.9)*16; let x=0,y=0,life=0;
       const t=setInterval(()=>{
-        life++; x+=dx; y+=dy+life*0.15;
-        p.style.transform=`translate(${x}px,${y}px) rotate(${life*12}deg)`;
-        p.style.opacity=String(0.9-life/90);
-        if(life>90){ clearInterval(t); p.remove(); }
+        life++; x+=dx; y+=dy+life*0.12;
+        p.style.transform=`translate(${x}px,${y}px) rotate(${life*15}deg)`;
+        p.style.opacity=String(0.95-life/80);
+        if(life>80){ clearInterval(t); p.remove(); }
       },16);
     }
 
     /* Memo */
     const memo=document.getElementById('memo');
     const saveMemo=document.getElementById('saveMemo');
-    try{ memo.value=localStorage.getItem('memo_lo')||''; }catch{}
+    try{ memo.value=localStorage.getItem('memo_lojain')||''; }catch(e){}
     saveMemo.addEventListener('click',()=>{
-      try{ localStorage.setItem('memo_lo',memo.value); saveMemo.textContent='Saved ✓'; setTimeout(()=>saveMemo.textContent='Save',1000); }catch{}
+      try{ localStorage.setItem('memo_lojain',memo.value); saveMemo.textContent='✓ Saved!'; setTimeout(()=>saveMemo.textContent='💾 Save',1500); }catch(e){}
     });
 
     /* Since Counter */
     function updateSince(){
       const el=document.getElementById('sinceCounter'); if(!el) return;
-      const diff=Math.max(0,Date.now()-new Date('2025-03-21T06:09:00').getTime());
+      const startDate=new Date('2025-03-21T06:09:00');
+      const diff=Math.max(0,Date.now()-startDate.getTime());
       const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000),
             m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
-      el.textContent=`Since we met: ${d}d ${h}h ${m}m ${s}s`;
+      el.innerHTML=`✨ Since we met: ${d}d ${h}h ${m}m ${s}s ✨`;
     }
     updateSince(); setInterval(updateSince,1000);
   </script>
@@ -246,108 +447,103 @@
     const link=document.getElementById('downLink');
     const target=document.getElementById('readySection');
     if(!link||!target) return;
-    const prefersReduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     link.addEventListener('click',(e)=>{
       e.preventDefault();
-      if('scrollBehavior' in document.documentElement.style){
-        target.scrollIntoView({behavior:prefersReduced?'auto':'smooth',block:'start'}); return;
-      }
-      const start=window.pageYOffset||document.documentElement.scrollTop;
-      const end=target.getBoundingClientRect().top+start;
-      const dist=end-start, dur=500; let startTs;
-      function step(ts){
-        if(!startTs) startTs=ts;
-        const t=Math.min(1,(ts-startTs)/dur);
-        const ease=t<.5?2*t*t:-1+(4-2*t)*t;
-        window.scrollTo(0,start+dist*ease);
-        if(t<1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
+      target.scrollIntoView({behavior:'smooth',block:'start'});
     });
   })();
   </script>
 
-  <!-- Mood Toy Sync -->
+  <!-- Mood Toy Sync - Fixed Version -->
   <script>
   (function(){
-    const toy=document.getElementById('moodToy');
-    const labelEl=document.getElementById('toyLabel');
-    if(!toy||!labelEl) return;
+    const toy = document.getElementById('moodToy');
+    const labelEl = document.getElementById('toyLabel');
+    if(!toy || !labelEl) return;
 
-    const COUPLE_ID='lojain_a23';
-    const API_URL='https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
-    const KEY_LOCAL='lojain_mood';
+    const COUPLE_ID = 'lojain_a23';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
+    const STORAGE_KEY = 'lojain_mood';
 
-    function apply(state){
+    function updateMoodUI(state) {
       const isSad = (state === 'sad');
-      toy.classList.remove('happy','sad');
-      toy.classList.add(isSad ? 'sad' : 'happy');
-      labelEl.textContent = isSad ? 'Mood: Sad' : 'Mood: Happy';
+      if(isSad) {
+        toy.classList.add('sad');
+        toy.classList.remove('happy');
+        labelEl.innerHTML = '😢 Mood: Sad';
+      } else {
+        toy.classList.add('happy');
+        toy.classList.remove('sad');
+        labelEl.innerHTML = '😊 Mood: Happy';
+      }
     }
 
-    const cached = localStorage.getItem(KEY_LOCAL);
-    if(cached) apply(cached);
-
-    function fetchRemote(){
-      const cb='cb_mood_get_'+Math.random().toString(36).slice(2);
-      const s=document.createElement('script');
-      window[cb]=function(data){
-        const state = (typeof data==='string' ? data.trim() : (data && data.state ? data.state.trim() : '')) || 'happy';
-        localStorage.setItem(KEY_LOCAL, state);
-        apply(state);
-        try{ delete window[cb]; }catch{}
-        s.remove();
-      };
-      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
-      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&callback=${cb}&_=${Date.now()}`;
-      document.head.appendChild(s);
+    const cachedMood = localStorage.getItem(STORAGE_KEY);
+    if(cachedMood && (cachedMood === 'happy' || cachedMood === 'sad')) {
+      updateMoodUI(cachedMood);
+    } else {
+      updateMoodUI('happy');
     }
 
-    function updateRemote(state){
-      localStorage.setItem(KEY_LOCAL, state);
-      const cb='cb_mood_set_'+Math.random().toString(36).slice(2);
-      const s=document.createElement('script');
-      window[cb]=function(){ try{delete window[cb];}catch{} s.remove(); };
-      s.onerror=function(){ try{delete window[cb];}catch{} s.remove(); };
-      s.src=`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=${encodeURIComponent(state)}&callback=${cb}&_=${Date.now()}`;
-      document.head.appendChild(s);
+    async function fetchRemoteMood() {
+      try {
+        const url = `${API_URL}?action=get&id=${encodeURIComponent(COUPLE_ID)}&t=${Date.now()}`;
+        const response = await fetch(url);
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        const mood = data.mood || data.state || 'happy';
+        if(mood === 'sad' || mood === 'happy') {
+          localStorage.setItem(STORAGE_KEY, mood);
+          updateMoodUI(mood);
+        }
+      } catch(error) {
+        console.warn('Fetch failed, using cached mood');
+      }
     }
 
-    fetchRemote();
+    async function updateRemoteMood(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, state);
+        updateMoodUI(state);
+        const url = `${API_URL}?action=set&id=${encodeURIComponent(COUPLE_ID)}&mood=${encodeURIComponent(state)}&t=${Date.now()}`;
+        await fetch(url);
+        
+        labelEl.style.opacity = '0.6';
+        setTimeout(() => { labelEl.style.opacity = '1'; }, 200);
+      } catch(error) {
+        console.error('Update failed:', error);
+        const originalText = labelEl.innerHTML;
+        labelEl.innerHTML = '⚠️ Offline';
+        setTimeout(() => { labelEl.innerHTML = originalText; }, 1500);
+      }
+    }
 
-    toy.addEventListener('click',()=>{
-      const next = toy.classList.contains('sad') ? 'happy' : 'sad';
-      apply(next);
-      updateRemote(next);
+    toy.addEventListener('click', () => {
+      const isCurrentlySad = toy.classList.contains('sad');
+      const newMood = isCurrentlySad ? 'happy' : 'sad';
+      updateRemoteMood(newMood);
     });
+
+    fetchRemoteMood();
+    setInterval(fetchRemoteMood, 8000);
   })();
   </script>
 
-  <!-- Mobile Fixes + IO -->
+  <!-- Intersection Observer for Ready Card -->
   <script>
   (function(){
-    const isMobile=/Mobi|Android/i.test(navigator.userAgent)||window.innerWidth<520;
-    function setVh(){ document.documentElement.style.setProperty('--vh',`${window.innerHeight*0.01}px`); }
-    setVh(); window.addEventListener('resize',setVh);
-
-    if(isMobile){
-      const starsWrap=document.getElementById('stars');
-      if(starsWrap){ const many=starsWrap.querySelectorAll('.star'); many.forEach((s,i)=>{ if(i%2===0) s.remove(); }); }
-    }
-
-    window.addEventListener('touchstart',()=>{},{passive:true});
-    window.addEventListener('touchmove',()=>{},{passive:true});
-
-    document.addEventListener('DOMContentLoaded',()=>{
-      const card=document.getElementById('readyCard'); if(!card) return;
-      if(!('IntersectionObserver' in window)){ card.classList.add('show'); return; }
-      const io=new IntersectionObserver(entries=>{
-        entries.forEach(e=>{ if(e.isIntersecting){ card.classList.add('show'); io.disconnect(); } });
-      },{threshold:0.2});
-      io.observe(card);
-    });
+    const card = document.getElementById('readyCard');
+    if(!card) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          card.classList.add('show');
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(card);
   })();
   </script>
-
 </body>
 </html>
