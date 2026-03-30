@@ -56,7 +56,7 @@ h1 { margin: 0 0 8px 0; font-size: 28px; letter-spacing: .5px; }
 .cta:hover { background: rgba(255, 255, 255, .06); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 0, 0, .25), 0 0 0 4px var(--ring); }
 button.cta { -webkit-appearance: none; appearance: none; cursor: pointer; }
 
-/* ===== Mood Toy (The Cute Style) ===== */
+/* ===== Mood Toy ===== */
 .mood-toy {
   position: fixed; right: 16px; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); z-index: 10;
   display: grid; place-items: center; gap: 6px; padding: 12px; border-radius: 20px;
@@ -66,23 +66,14 @@ button.cta { -webkit-appearance: none; appearance: none; cursor: pointer; }
 }
 .mood-toy:hover { transform: translateY(-4px) scale(1.02); }
 .mood-toy .toy-label { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; }
-
-/* الألوان الأساسية للدمية */
-#moodToy.happy #head { fill: #ffcfdf !important; transition: fill 0.5s ease; } /* وردي */
-#moodToy.sad #head   { fill: #d0e1ff !important; transition: fill 0.5s ease; } /* أزرق */
-
-/* ملامح الوجه */
+#moodToy.happy #head { fill: #ffcfdf !important; transition: fill 0.5s ease; }
+#moodToy.sad #head   { fill: #d0e1ff !important; transition: fill 0.5s ease; }
 .face { opacity: 0; transition: opacity 0.3s ease; }
 .mood-toy.happy .face-happy { opacity: 1; }
 .mood-toy.sad .face-sad { opacity: 1; }
+.face circle, .face path { fill: #4b5563 !important; stroke: #4b5563 !important; stroke-width: 2px; }
 
-.face circle, .face path {
-  fill: #4b5563 !important;
-  stroke: #4b5563 !important;
-  stroke-width: 2px;
-}
-
-/* ===== Since Widget (Fixed Position) ===== */
+/* ===== Since Widget ===== */
 .since {
   position: fixed !important; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   z-index: 9; background: rgba(255, 255, 255, .08); border: 1px solid var(--glass-bd);
@@ -99,123 +90,167 @@ button.cta { -webkit-appearance: none; appearance: none; cursor: pointer; }
   .since { right: 12px; bottom: 20px; }
   .wrap { padding-bottom: 280px; }
 }
-/* تنسيق رابط السكرول (اللي كان طالع أزرق) */
+
+/* ===== Down Link ===== */
 .down {
-  display: block;
-  margin: 15px auto;
-  color: var(--muted) !important; /* لون رمادي هادي */
-  text-decoration: none !important; /* حذف الخط اللي تحته */
-  font-size: 14px;
-  opacity: 0.8;
-  transition: opacity 0.3s;
+  display: block; margin: 15px auto;
+  color: var(--muted) !important; text-decoration: none !important;
+  font-size: 14px; opacity: 0.8; transition: opacity 0.3s;
 }
 .down:hover { opacity: 1; color: var(--accent) !important; }
 
-/* إرجاع دائرة الأنفاس (اللي اختفت) */
-.breathe { margin: 25px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.circle { 
-  width: 50px; height: 50px; 
-  border: 3px solid var(--accent); 
-  border-radius: 50%; 
-  display: flex; align-items: center; justify-content: center; 
-  animation: breathe 14s infinite ease-in-out; 
-}
-.circle-inner { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  28% { transform: scale(2.8); opacity: 1; } /* شهيق */
-  57% { transform: scale(2.8); opacity: 1; } /* كتم */
-}
-/* ===== إصلاح دائرة الأنفاس ===== */
-.breathe {
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
+/* ===== Breathe Circle ===== */
+.breathe { margin: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .circle {
-  width: 60px !important;      /* ثابت وصغير */
-  height: 60px !important;
-  min-width: 60px;
-  min-height: 60px;
-  border: 3px solid var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: breathe 14s infinite ease-in-out;
-  flex-shrink: 0;              /* لا يتمدد */
+  width: 60px !important; height: 60px !important; min-width: 60px; min-height: 60px;
+  border: 3px solid var(--accent); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  animation: breathe 14s infinite ease-in-out; flex-shrink: 0;
 }
-
-.circle-inner {
-  width: 12px;
-  height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
+.circle-inner { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; pointer-events: none; }
 @keyframes breathe {
   0%, 100% { transform: scale(1); opacity: 0.4; }
-  28%       { transform: scale(1.6); opacity: 1; }   /* شهيق — مش يطير */
-  57%       { transform: scale(1.6); opacity: 1; }   /* كتم */
+  28%       { transform: scale(1.6); opacity: 1; }
+  57%       { transform: scale(1.6); opacity: 1; }
 }
+.breath-steps { font-size: 13px; color: var(--muted); opacity: 0.8; text-align: center; }
 
-/* ===== إصلاح الأزرار (توحيد الشكل) ===== */
+/* ===== Buttons unified ===== */
 .cta, .down {
-  display: block;
-  padding: 12px 18px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, .14);
-  text-decoration: none;
-  color: var(--text) !important;
-  font-weight: 700;
-  font-size: 15px;
-  background: rgba(255, 255, 255, .04);   /* نفس الخلفية للكل */
+  display: block; padding: 12px 18px; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .14); text-decoration: none;
+  color: var(--text) !important; font-weight: 700; font-size: 15px;
+  background: rgba(255, 255, 255, .04);
   transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
-  text-align: center;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  max-width: 520px;
-  margin: 8px auto;
-  box-sizing: border-box;
+  text-align: center; cursor: pointer; -webkit-appearance: none; appearance: none;
+  width: 100%; max-width: 520px; margin: 8px auto; box-sizing: border-box;
 }
-
 .cta:hover, .down:hover {
-  background: rgba(255, 255, 255, .09);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, .09); transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(0,0,0,.25), 0 0 0 3px var(--ring);
 }
 
-/* ===== إصلاح تنسيق النصوص في المنتصف ===== */
-.support {
-  text-align: center;
-  padding: 10px 8px;
+/* ===== Support Section ===== */
+.support { text-align: center; padding: 10px 8px; }
+.support h3 { font-size: 17px; font-weight: 700; margin: 0 0 14px 0; color: var(--text); }
+.support p { font-size: 15px; line-height: 1.8; color: var(--muted); margin: 6px 0; text-align: center; }
+
+/* ===== Section ===== */
+.section { position: relative; z-index: 2; padding: 20px 16px 240px; }
+
+/* ===== Grateful / Ready Card ===== */
+#readyCard {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; text-align: center; padding: 32px 24px;
+}
+#readyCard.show { animation: fadeUp 0.7s ease forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== Planet Scene ===== */
+.planet-scene {
+  position: relative; width: 150px; height: 150px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+}
+.orbit-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1.5px dashed rgba(255, 255, 255, 0.18);
+  animation: spin-ring 14s linear infinite;
+}
+@keyframes spin-ring { to { transform: rotate(360deg); } }
+
+.planet {
+  font-size: 48px; z-index: 2; line-height: 1;
+  animation: planet-bob 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgba(255, 77, 109, 0.35));
+}
+@keyframes planet-bob {
+  0%, 100% { transform: scale(1) rotate(-4deg); }
+  50%       { transform: scale(1.07) rotate(4deg); }
 }
 
-.support h3 {
-  font-size: 17px;
-  font-weight: 700;
-  margin: 0 0 14px 0;
-  color: var(--text);
+.rocket {
+  position: absolute;
+  font-size: 18px;
+  top: 6px; left: 50%;
+  transform-origin: 0 69px;
+  animation: rocket-orbit 7s linear infinite;
+}
+@keyframes rocket-orbit { to { transform: translateX(-50%) rotate(360deg); } }
+
+/* ===== Grateful Message ===== */
+.grateful-msg { max-width: 480px; }
+.grateful-title {
+  font-size: 22px; font-weight: 900; margin: 0 0 12px 0;
+  color: var(--text); letter-spacing: 0.3px;
+}
+.grateful-text {
+  font-size: 15px; line-height: 1.85; color: var(--muted);
+  margin: 0 0 10px 0;
+}
+.grateful-sub {
+  font-size: 14px; color: var(--accent); font-weight: 700;
+  margin: 0; letter-spacing: 0.2px;
 }
 
-.support p {
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--muted);
-  margin: 6px 0;
-  text-align: center;
+/* ===== Distance Widget ===== */
+.distance-widget {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-bd);
+  border-radius: 16px; padding: 14px 20px;
+  width: 100%; max-width: 420px;
 }
 
-.breath-steps {
-  font-size: 13px;
-  color: var(--muted);
-  opacity: 0.8;
-  text-align: center;
+.distance-city {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  min-width: 60px;
+}
+.city-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: city-pulse 2s ease-in-out infinite;
+}
+.city-dot--end {
+  background: #cfd3ff;
+  box-shadow: 0 0 8px #cfd3ff;
+}
+@keyframes city-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50%       { transform: scale(1.3); opacity: 1; }
+}
+.city-name { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+
+.distance-track {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 5px; position: relative;
+}
+.distance-line {
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--accent), rgba(207,211,255,0.5));
+  border-radius: 2px; position: relative; overflow: visible;
+}
+.distance-plane {
+  font-size: 16px;
+  animation: fly 3.5s ease-in-out infinite;
+}
+@keyframes fly {
+  0%   { transform: translateX(-30px) scaleX(1); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(30px) scaleX(1); opacity: 0; }
+}
+.distance-label {
+  font-size: 18px; font-weight: 900;
+  color: var(--text); letter-spacing: 1px;
+}
+
+/* ===== Mobile distance ===== */
+@media (max-width: 480px) {
+  .distance-widget { padding: 12px 14px; gap: 8px; }
+  .city-name { font-size: 11px; }
+  .distance-label { font-size: 15px; }
+  .grateful-title { font-size: 19px; }
+  .grateful-text { font-size: 14px; }
 }

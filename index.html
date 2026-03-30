@@ -6,7 +6,7 @@
   <title>Lojain — A23</title>
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 
   <style>
     :root { --vh: 1vh; }
@@ -79,13 +79,45 @@
     </div>
   </div>
 
+  <!-- ===== Grateful Section (replaces ready section) ===== -->
   <section class="section" id="readySection">
     <div class="card" id="readyCard">
-      <h2 style="margin:0 0 10px 0">When you're ready</h2>
-      <p class="subtitle" style="text-align:left">Take a breath. When you feel okay, tap the button below.</p>
-      <button id="readyOnceBtn" class="cta" style="margin-top:10px">I'm ready — tap once</button>
-      <button id="resetReady" class="cta" style="margin-top:6px;">Reset (all devices)</button>
-      <p id="readyOnceState" class="footer" style="margin-top:8px"></p>
+
+      <!-- Planet + Orbit -->
+      <div class="planet-scene">
+        <div class="orbit-ring"></div>
+        <div class="planet">🪐</div>
+        <div class="rocket">🚀</div>
+      </div>
+
+      <!-- Grateful Message -->
+      <div class="grateful-msg">
+        <h2 class="grateful-title">She became mine. 🌙</h2>
+        <p class="grateful-text">
+          I don't take it for granted — not even for a second.<br>
+          Out of everyone in this world, you chose me.<br>
+          And I am endlessly, deeply grateful that you did.
+        </p>
+        <p class="grateful-sub">You are the best thing that's ever been mine. ❤️</p>
+      </div>
+
+      <!-- Distance Widget -->
+      <div class="distance-widget">
+        <div class="distance-city">
+          <span class="city-dot"></span>
+          <span class="city-name">Al Khobar</span>
+        </div>
+        <div class="distance-track">
+          <div class="distance-line"></div>
+          <div class="distance-plane">✈️</div>
+          <div class="distance-label">380 km</div>
+        </div>
+        <div class="distance-city">
+          <span class="city-dot city-dot--end"></span>
+          <span class="city-name">Riyadh</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -208,49 +240,6 @@
     updateSince(); setInterval(updateSince,1000);
   </script>
 
-  <!-- I'm Ready Sync -->
-  <script>
-  (function(){
-    const COUPLE_ID='lojain_a23_ready';
-    const API_URL='https://script.google.com/macros/s/AKfycbwfrBBb4NLNHDX3M0_C80Jut1V6tblDaecBPWBgqSUqhr0E1EIopF86GkJszmyI2seBjw/exec';
-    const readyBtn=document.getElementById('readyOnceBtn');
-    const resetBtn=document.getElementById('resetReady');
-    const stateEl=document.getElementById('readyOnceState');
-    if(!readyBtn||!stateEl) return;
-
-    function jsonp(url){
-      return new Promise((resolve,reject)=>{
-        const cb='cb_'+Math.random().toString(36).slice(2);
-        const s=document.createElement('script');
-        window[cb]=(data)=>{ resolve(data); try{delete window[cb];}catch{} s.remove(); };
-        s.onerror=(e)=>{ reject(e); try{delete window[cb];}catch{} s.remove(); };
-        s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&_='+Date.now();
-        document.head.appendChild(s);
-      });
-    }
-
-    function applyReady(ts){ readyBtn.disabled=true; readyBtn.textContent='✔ Already marked'; stateEl.textContent=ts||'Marked — synced across devices.'; }
-    function clearReady(){ readyBtn.disabled=false; readyBtn.textContent="I'm ready — tap once"; stateEl.textContent=''; }
-
-    async function fetchState(){
-      try{ const val=await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}`); val==='ready'?applyReady():clearReady(); }
-      catch(e){ console.warn('fetchState failed',e); }
-    }
-    async function markReady(){
-      try{ const ts=new Date().toLocaleString(); await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=ready`); applyReady('Marked on '+ts+' — synced.'); }
-      catch(e){ console.warn('markReady failed',e); }
-    }
-    async function doReset(){
-      try{ await jsonp(`${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=not_ready`); clearReady(); }
-      catch(e){ console.warn('resetReady failed',e); }
-    }
-
-    fetchState();
-    readyBtn.addEventListener('click',()=>{ if(!readyBtn.disabled) markReady(); });
-    if(resetBtn) resetBtn.addEventListener('click',doReset);
-  })();
-  </script>
-
   <!-- Smooth Scroll -->
   <script>
   (function(){
@@ -278,7 +267,7 @@
   })();
   </script>
 
-  <!-- Mood Toy Sync — الإصلاح الرئيسي -->
+  <!-- Mood Toy Sync -->
   <script>
   (function(){
     const toy=document.getElementById('moodToy');
@@ -289,7 +278,6 @@
     const API_URL='https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
     const KEY_LOCAL='lojain_mood';
 
-    /* تطبيق الحالة على الدمية */
     function apply(state){
       const isSad = (state === 'sad');
       toy.classList.remove('happy','sad');
@@ -297,16 +285,13 @@
       labelEl.textContent = isSad ? 'Mood: Sad' : 'Mood: Happy';
     }
 
-    /* تحميل الحالة المحفوظة فوراً (بدون انتظار الشبكة) */
     const cached = localStorage.getItem(KEY_LOCAL);
     if(cached) apply(cached);
 
-    /* جلب الحالة من السيرفر عبر JSONP */
     function fetchRemote(){
       const cb='cb_mood_get_'+Math.random().toString(36).slice(2);
       const s=document.createElement('script');
       window[cb]=function(data){
-        /* السيرفر يرجع string مباشرة أو object فيه .state */
         const state = (typeof data==='string' ? data.trim() : (data && data.state ? data.state.trim() : '')) || 'happy';
         localStorage.setItem(KEY_LOCAL, state);
         apply(state);
@@ -318,7 +303,6 @@
       document.head.appendChild(s);
     }
 
-    /* إرسال الحالة الجديدة للسيرفر */
     function updateRemote(state){
       localStorage.setItem(KEY_LOCAL, state);
       const cb='cb_mood_set_'+Math.random().toString(36).slice(2);
@@ -329,10 +313,8 @@
       document.head.appendChild(s);
     }
 
-    /* تحميل عند فتح الصفحة */
     fetchRemote();
 
-    /* النقر لتغيير المزاج */
     toy.addEventListener('click',()=>{
       const next = toy.classList.contains('sad') ? 'happy' : 'sad';
       apply(next);
