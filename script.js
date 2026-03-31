@@ -255,6 +255,77 @@
   };
 
   /* ============================================================
+     9. Memory book
+     ============================================================ */
+  const initMemoryBook = () => {
+    const book = $('#memoryBook');
+    const dots = $('#memoryBookDots');
+    if (!book || !dots) return;
+
+    const photos = [
+      'album-images/Desktop_Screenshot_2026.03.15_-_13.08.14.93.png',
+      'album-images/Desktop_Screenshot_2026.03.15_-_13.11.10.41.png',
+      'album-images/Overwatch_2_Screenshot_2026.03.17_-_14.20.59.98.png',
+      'album-images/Overwatch_2_Screenshot_2026.03.17_-_14.27.01.91.png',
+      'album-images/Overwatch_2_Screenshot_2026.03.17_-_14.34.05.99.png',
+      'album-images/Overwatch_2_Screenshot_2026.03.17_-_15.53.18.38.png'
+    ];
+
+    const spreads = [];
+    for (let i = 0; i < photos.length; i += 2) {
+      spreads.push(photos.slice(i, i + 2));
+    }
+    if (!spreads.length) return;
+
+    let current = 0;
+    let flipping = false;
+
+    dots.innerHTML = spreads.map((_, i) => `<span class="memory-book-dot${i === 0 ? ' active' : ''}"></span>`).join('');
+
+    const render = () => {
+      const spread = spreads[current];
+      const pageHtml = spread.map((src, idx) => `
+        <div class="memory-book-page">
+          <img src="${src}" alt="Memory photo ${current * 2 + idx + 1}" loading="lazy" />
+          <div class="memory-book-label">Page ${current + 1} · Photo ${current * 2 + idx + 1}</div>
+        </div>
+      `).join('');
+
+      book.innerHTML = `
+        <div class="memory-book-spread">
+          ${pageHtml}
+        </div>
+        <div class="memory-book-meta">
+          <span>Our little gaming memories</span>
+          <span>${current + 1} / ${spreads.length}</span>
+        </div>
+      `;
+      $$('.memory-book-dot').forEach((dot, i) => dot.classList.toggle('active', i === current));
+    };
+
+    const flip = () => {
+      if (flipping) return;
+      flipping = true;
+      book.classList.add('is-flipping');
+      setTimeout(() => {
+        current = (current + 1) % spreads.length;
+        render();
+        book.classList.remove('is-flipping');
+        setTimeout(() => { flipping = false; }, 120);
+      }, 380);
+    };
+
+    render();
+    book.addEventListener('click', flip);
+    book.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        flip();
+      }
+    });
+  };
+
+  /* ============================================================
      9. Smooth Scroll
      ============================================================ */
   const initScroll = () => {
@@ -405,6 +476,7 @@
     initConfetti();
     initBreathing(breath);
     initMemo();
+    initMemoryBook();
     initScroll();
     initMoodToy(apiUrl, cplId);
     initReadyAnimation();
