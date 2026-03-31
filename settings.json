@@ -1,21 +1,42 @@
 {
   "herName": "Lojain",
+  "hisSignature": "A23",
   "meetDateIso": "2025-03-21T06:09:00",
+  "cityFrom": "Al Khobar",
+  "cityTo": "Riyadh",
+  "distanceKm": 380,
+
   "lines": [
-    "If anything feels heavy today, hand it to me — I’ll carry it with you.",
-    "No matter what, you’re not facing this alone.",
-    "I’m proud of you, even on the days you can’t see it.",
-    "Take your time. I’ll wait. I’m not going anywhere.",
+    "If anything feels heavy today, hand it to me — I'll carry it with you.",
+    "No matter what, you're not facing this alone.",
+    "I'm proud of you, even on the days you can't see it.",
+    "Take your time. I'll wait. I'm not going anywhere.",
     "Your feelings are safe with me — always.",
     "You are loved more than any bad moment can measure.",
     "Breathe. One small step is enough for today.",
-    "If you need me at 3AM or 3PM — I’m there.",
+    "If you need me at 3AM or 3PM — I'm there.",
     "I choose you on the bright days and the stormy ones.",
     "You and I — team forever."
   ],
-  "breathingTips": [
-    "Inhale 4 · Hold 4 · Exhale 6 — repeat",
-    "Square: Inhale 4 · Hold 4 · Exhale 4 · Hold 4",
-    "4–7–8: Inhale 4 · Hold 7 · Exhale 8"
-  ]
+
+  "supportItems": [
+    { "icon": "🤝", "text": "You're not alone. I'm with you — now and forever." },
+    { "icon": "🌊", "text": "Whatever happened, we'll face it together. One step at a time." },
+    { "icon": "💖", "text": "You are loved, you are safe, and your feelings matter to me." },
+    { "icon": "📱", "text": "Text me when you're ready. Or just read this and breathe — I'm here." }
+  ],
+
+  "gratefulTitle": "She became mine. 🌙",
+  "gratefulText": "I don't take it for granted — not even for a second.\nOut of everyone in this world, you chose me.\nAnd I am endlessly, deeply grateful that you did.",
+  "gratefulSub": "✨ You are the best thing that's ever been mine. ❤️ ✨",
+
+  "breathing": {
+    "inhale": 4,
+    "hold1": 4,
+    "exhale": 6,
+    "hold2": 0
+  },
+
+  "moodApiUrl": "https://script.google.com/macros/s/AKfycbzSthLe4Fp2asZLWnQw8UnjTjlvv9ykTGqU-TKQn7z9Xhd0I_p1GqIhBI-7cVSwEQ588Q/exec",
+  "coupleId": "lojain_a23"
 }

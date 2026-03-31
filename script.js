@@ -1,179 +1,415 @@
-/* ================================
-   CONFIGURATION
-================================ */
-const HER_NAME = 'Lojain';
-const MEET_DATE_ISO = '2025-03-21T06:09:00'; // التاريخ المعتمد
-const COUPLE_ID = 'lojain_a23'; // معرف خاص بكما للمزامنة
-const API_URL = 'https://script.google.com/macros/s/AKfycbwXfzLg1a_o8y2vEVEbXHeekIVhStkwajuYq8dHR6PM7yDVxMR13NyC9qdolaWklftUPw/exec';
+/* ============================================================
+   script.js — Lojain Project
+   ============================================================
 
-/* ================================
-   SINCE COUNTER
-================================ */
-function pad(n) { return String(n).padStart(2, '0'); }
+   لتغيير شيء في الموقع، عدّل settings.json فقط — لا تحتاج
+   لتعديل هذا الملف إلا إذا أردت إضافة ميزة جديدة.
 
-function updateSince() {
-  const el = document.getElementById('sinceCounter');
-  if (!el) return;
+   ============================================================ */
+(() => {
 
-  const start = new Date(MEET_DATE_ISO).getTime();
-  const diff = Math.max(0, Date.now() - start);
+  /* ── Helpers ── */
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-
-  el.textContent = `Since we met: ${d}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-}
-updateSince();
-setInterval(updateSince, 1000);
-
-/* ================================
-   MOOD TOY (SYNCED VIA JSONP)
-================================ */
-const toy = document.getElementById('moodToy');
-const labelEl = document.getElementById('toyLabel');
-const figure = document.getElementById('toyFigure');
-let busy = false;
-
-// وظيفة لتحديث شكل الدمية
-function applyMoodUI(state) {
-  if (!toy) return;
-  toy.classList.toggle('sad', state === 'sad');
-  toy.classList.toggle('happy', state !== 'sad');
-  if (labelEl) labelEl.textContent = state === 'sad' ? 'She is upset' : 'Click me';
-}
-
-// وظيفة لجلب الحالة من السيرفر (JSONP)
-async function fetchRemoteMood() {
-  const cb = 'cb_get_mood';
-  const s = document.createElement('script');
-  window[cb] = (data) => {
-    applyMoodUI(data.state || 'happy');
-    delete window[cb];
-    s.remove();
+  /* ============================================================
+     1. تحميل الإعدادات
+     ============================================================ */
+  const loadConfig = async () => {
+    try {
+      const res = await fetch('settings.json', { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    } catch (e) { console.warn('⚠️ settings.json لم يُحمّل — استخدام القيم الافتراضية', e); }
+    return null; // يُستخدم الـ fallback المكتوب في HTML
   };
-  s.src = `${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&callback=${cb}&_=${Date.now()}`;
-  document.head.appendChild(s);
-}
 
-// وظيفة لإرسال الحالة للسيرفر (JSONP)
-function updateRemoteMood(state) {
-  if (busy) return;
-  busy = true;
-  const cb = 'cb_set_mood';
-  const s = document.createElement('script');
-  window[cb] = () => {
-    delete window[cb];
-    s.remove();
-    busy = false;
+  /* ============================================================
+     2. ضبط --vh (مشكلة الموبايل)
+     ============================================================ */
+  const fixVH = () => {
+    const set = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight*.01}px`);
+    set();
+    window.addEventListener('resize', set);
   };
-  s.src = `${API_URL}?id=${encodeURIComponent(COUPLE_ID)}&state=${state}&callback=${cb}&_=${Date.now()}`;
-  document.head.appendChild(s);
-}
 
-if (toy) {
-  fetchRemoteMood(); // جلب الحالة عند فتح الصفحة
-  toy.addEventListener('click', () => {
-    const isSad = toy.classList.contains('sad');
-    const nextState = isSad ? 'happy' : 'sad';
-    
-    // أنيميشن الدوران
-    if (figure) {
-      figure.classList.remove('flip');
-      void figure.offsetWidth; 
-      figure.classList.add('flip');
-    }
-    
-    applyMoodUI(nextState);
-    updateRemoteMood(nextState);
-  });
-}
+  /* ============================================================
+     3. عدّاد الوقت
+     ============================================================ */
+  const startCounter = (isoDate) => {
+    const el = $('#sinceCounter');
+    if (!el) return;
+    const start = new Date(isoDate).getTime();
+    const tick = () => {
+      const diff = Math.max(0, Date.now() - start);
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      el.textContent = `✨ Together: ${d}d ${h}h ${m}m ${s}s ✨`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  };
 
-/* ================================
-   NOTEBOOK (LOCAL STORAGE)
-================================ */
-const noteKey = 'note_lo';
-const note = document.getElementById('memo');
-const saveBtn = document.getElementById('saveMemo');
+  /* ============================================================
+     4. الاقتباسات الدوّارة
+     ============================================================ */
+  const initQuotes = (lines) => {
+    const textEl = $('#quoteText');
+    const dotsEl = $('#dots');
+    if (!textEl || !dotsEl || !lines?.length) return;
 
-if (note && saveBtn) {
-  note.value = localStorage.getItem(noteKey) || '';
-  saveBtn.addEventListener('click', () => {
-    localStorage.setItem(noteKey, note.value);
-    saveBtn.textContent = 'Saved ✓';
-    setTimeout(() => (saveBtn.textContent = 'Save'), 1200);
-  });
-}
+    let idx = 0;
 
-/* ================================
-   BREATHING COACH
-================================ */
-const tips = [
-  'Inhale 4 · Hold 4 · Exhale 6 — repeat',
-  'Square: Inhale 4 · Hold 4 · Exhale 4 · Hold 4',
-  '4–7–8: Inhale 4 · Hold 7 · Exhale 8',
-];
-let tipIdx = 0;
-const hint = document.querySelector('.breath-steps');
-
-setInterval(() => {
-  if (!hint) return;
-  tipIdx = (tipIdx + 1) % tips.length;
-  hint.textContent = tips[tipIdx];
-}, 7000);
-
-/* ================================
-   HEARTS BURST & FLOATING
-================================ */
-function spawnHeart() {
-  const h = document.createElement('div');
-  h.innerHTML = '💖';
-  h.className = 'heart-float';
-  h.style.position = 'fixed';
-  h.style.left = Math.random() * 100 + 'vw';
-  h.style.bottom = '-50px';
-  h.style.fontSize = (16 + Math.random() * 20) + 'px';
-  h.style.zIndex = '9999';
-  h.style.pointerEvents = 'none';
-  document.body.appendChild(h);
-  
-  // أنيميشن بسيط يدوي في حال لم يكن الـ CSS جاهزاً
-  let pos = 0;
-  const intrvl = setInterval(() => {
-    pos += 2;
-    h.style.transform = `translateY(-${pos}px)`;
-    h.style.opacity = 1 - (pos/800);
-    if(pos > 800) { h.remove(); clearInterval(intrvl); }
-  }, 16);
-}
-
-const loveBtn = document.getElementById('confettiBtn');
-if (loveBtn) {
-  loveBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    for (let i = 0; i < 30; i++) setTimeout(spawnHeart, i * 50);
-  });
-}
-
-/* ================================
-   SMOOTH SCROLL & REVEAL
-================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const down = document.getElementById('downLink');
-  const target = document.getElementById('readySection');
-  if (down && target) {
-    down.addEventListener('click', (e) => {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
+    lines.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(d);
     });
-  }
-  
-  const card = document.getElementById('readyCard');
-  if (card && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if(e.isIntersecting) { card.classList.add('show'); io.disconnect(); } });
-    }, { threshold: 0.2 });
+
+    const show = (i) => {
+      textEl.classList.remove('in');
+      textEl.classList.add('out');
+      setTimeout(() => {
+        textEl.textContent = lines[i];
+        textEl.classList.remove('out');
+        textEl.classList.add('in');
+        $$('.dot').forEach((d, k) => d.classList.toggle('active', k === i));
+      }, 400);
+    };
+
+    textEl.textContent = lines[0];
+    textEl.classList.add('in');
+    setInterval(() => { idx = (idx + 1) % lines.length; show(idx); }, 3200);
+  };
+
+  /* ============================================================
+     5. النجوم والقلوب
+     ============================================================ */
+  const initParticles = () => {
+    if (prefersReduced) return;
+
+    // نجوم
+    const starsEl = $('#stars');
+    if (starsEl) {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 90; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = (Math.random() * 2 + 1).toFixed(1);
+        s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;top:${Math.random()*100}vh;animation-delay:${(Math.random()*7).toFixed(2)}s;animation-duration:${(4+Math.random()*5).toFixed(1)}s;`;
+        frag.appendChild(s);
+      }
+      starsEl.appendChild(frag);
+    }
+
+    // قلوب
+    const heartsEl = $('#hearts');
+    if (heartsEl) {
+      const emojis = ['❤️', '🩷', '💕', '✨', '💖', '🌸'];
+      const spawn = () => {
+        const h = document.createElement('div');
+        h.className = 'heart-p';
+        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.bottom = '-30px';
+        h.style.animationDuration = (9 + Math.random() * 7).toFixed(1) + 's';
+        heartsEl.appendChild(h);
+        setTimeout(() => h.remove(), 16000);
+      };
+      spawn();
+      setInterval(spawn, 800);
+    }
+  };
+
+  /* ============================================================
+     6. Confetti
+     ============================================================ */
+  const initConfetti = () => {
+    const btn = $('#confettiBtn');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      if (prefersReduced) return;
+      const hearts = ['❤', '💕', '💖', '💗', '✨'];
+      for (let i = 0; i < 32; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        p.style.left = `${e.clientX + (Math.random() * 70 - 35)}px`;
+        p.style.top = `${e.clientY + (Math.random() * 22 - 10)}px`;
+        p.style.fontSize = `${14 + Math.random() * 8}px`;
+        document.body.appendChild(p);
+        let dx = (Math.random() - .5) * 6;
+        let dy = -(2 + Math.random() * 4);
+        let x = 0, y = 0, life = 0, rot = Math.random() * 30 - 15;
+        const t = setInterval(() => {
+          life++;
+          x += dx;
+          y += dy - life * .06;
+          rot += dx * .8;
+          p.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${1 - life / 90})`;
+          p.style.opacity = String(1 - life / 50);
+          if (life > 50) { clearInterval(t); p.remove(); }
+        }, 16);
+      }
+    });
+  };
+
+  /* ============================================================
+     7. BREATHING ENGINE ← الجزء الجديد
+     ============================================================
+     يُشغّل دورة تنفس حقيقية مزامنة مع الأنيميشن:
+       inhale → hold1 → exhale → hold2 → (repeat)
+     كل شيء مبني على requestAnimationFrame لأقصى سلاسة.
+     ============================================================ */
+  const initBreathing = (cfg) => {
+    const dot   = $('.breathe-dot');
+    const arc   = $('.breathe-arc');
+    const label = $('.breathe-phase-label');
+    const sub   = $('.breathe-phase-sub');
+    const cdEl  = $('.breathe-countdown');
+    if (!dot || !arc) return;
+
+    // مراحل الدورة — كل phase: [اسم للعرض, مدة بالثانية, scale صغير→كبير, نص فرعي]
+    const phases = [
+      { name: '🌬️ Inhale',  dur: cfg.inhale, scaleFrom: 1,   scaleTo: 1.9, hint: `Breathe in for ${cfg.inhale}s...`  },
+      { name: '🤫 Hold',    dur: cfg.hold1,  scaleFrom: 1.9, scaleTo: 1.9, hint: `Hold for ${cfg.hold1}s...`         },
+      { name: '😮‍💨 Exhale', dur: cfg.exhale, scaleFrom: 1.9, scaleTo: 1,   hint: `Breathe out for ${cfg.exhale}s...` },
+    ];
+    if (cfg.hold2 > 0) {
+      phases.push({ name: '🤫 Hold', dur: cfg.hold2, scaleFrom: 1, scaleTo: 1, hint: `Hold for ${cfg.hold2}s...` });
+    }
+
+    const totalDur = phases.reduce((s, p) => s + p.dur, 0); // مجموع ثواني دورة واحدة
+    const ARC_FULL = 345; // stroke-dasharray
+
+    // دالة easing ناعمة (ease-in-out)
+    const easeInOut = (t) => t < .5 ? 2*t*t : -1+(4-2*t)*t;
+
+    // نقطة البداية (timestamp)
+    let startTime = null;
+
+    const tick = (ts) => {
+      if (!startTime) startTime = ts;
+      const elapsed = ((ts - startTime) / 1000) % totalDur; // ثواني داخل الدورة الحالية
+
+      // تحديد المرحلة الحالية
+      let acc = 0;
+      let phaseIdx = 0;
+      let phaseElapsed = 0;
+      for (let i = 0; i < phases.length; i++) {
+        if (elapsed < acc + phases[i].dur) {
+          phaseIdx = i;
+          phaseElapsed = elapsed - acc;
+          break;
+        }
+        acc += phases[i].dur;
+      }
+
+      const phase = phases[phaseIdx];
+      const t = easeInOut(Math.min(phaseElapsed / phase.dur, 1));
+
+      // ── Scale النقطة ──
+      const scale = phase.scaleFrom + (phase.scaleTo - phase.scaleFrom) * t;
+      dot.style.transform = `scale(${scale.toFixed(3)})`;
+
+      // ── Glow ──
+      const glowSize = 15 + (scale - 1) * 25;
+      dot.style.boxShadow = `0 0 ${glowSize.toFixed(0)}px var(--accent), 0 0 ${(glowSize*2).toFixed(0)}px rgba(255,77,109,.25)`;
+
+      // ── Arc SVG — يدور مع الدورة الكاملة ──
+      const arcProgress = elapsed / totalDur;
+      arc.style.strokeDashoffset = String(ARC_FULL * (1 - arcProgress));
+
+      // ── النصوص ──
+      const remaining = Math.ceil(phase.dur - phaseElapsed);
+      if (label) label.textContent = phase.name;
+      if (sub)   sub.textContent   = phase.hint;
+      if (cdEl)  cdEl.textContent  = remaining > 0 ? remaining : '';
+
+      requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  };
+
+  /* ============================================================
+     8. Memo (دفتر الملاحظات)
+     ============================================================ */
+  const initMemo = () => {
+    const memo = $('#memo');
+    const btn  = $('#saveMemo');
+    if (!memo || !btn) return;
+    const KEY = 'memo_lojain';
+    try { memo.value = localStorage.getItem(KEY) || ''; } catch (_) {}
+    btn.addEventListener('click', () => {
+      try {
+        localStorage.setItem(KEY, memo.value);
+        const orig = btn.textContent;
+        btn.textContent = '✓ Saved!';
+        setTimeout(() => btn.textContent = orig, 1800);
+      } catch (e) { console.warn('Memo save failed', e); }
+    });
+  };
+
+  /* ============================================================
+     9. Smooth Scroll
+     ============================================================ */
+  const initScroll = () => {
+    const link   = $('#downLink');
+    const target = $('#readySection');
+    if (!link || !target) return;
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
+    });
+  };
+
+  /* ============================================================
+     10. Mood Toy
+     ============================================================ */
+  const initMoodToy = (apiUrl, coupleId) => {
+    const toy   = $('#moodToy');
+    const label = $('#toyLabel');
+    if (!toy) return;
+    const KEY = 'lojain_mood';
+
+    const apply = (mood) => {
+      const sad = mood === 'sad';
+      toy.classList.toggle('sad',   sad);
+      toy.classList.toggle('happy', !sad);
+      label.textContent = sad ? '😢 Mood: Sad' : '😊 Mood: Happy';
+    };
+
+    apply(localStorage.getItem(KEY) || 'happy');
+
+    const fetchMood = async () => {
+      try {
+        const res = await fetch(`${apiUrl}?action=get&id=${coupleId}&t=${Date.now()}`);
+        const d   = await res.json();
+        if (d.success && d.mood) { localStorage.setItem(KEY, d.mood); apply(d.mood); }
+      } catch (_) {}
+    };
+    const setMood = async (mood) => {
+      localStorage.setItem(KEY, mood);
+      apply(mood);
+      try { await fetch(`${apiUrl}?action=set&id=${coupleId}&mood=${mood}&t=${Date.now()}`); } catch (_) {}
+    };
+
+    toy.addEventListener('click', () => setMood(toy.classList.contains('sad') ? 'happy' : 'sad'));
+    fetchMood();
+    setInterval(fetchMood, 5000);
+  };
+
+  /* ============================================================
+     11. Ready animation
+     ============================================================ */
+  const initReadyAnimation = () => {
+    const container = $('#ready-animation');
+    if (!container || typeof lottie === 'undefined') return;
+
+    lottie.loadAnimation({
+      container,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'ready-animation.json'
+    });
+  };
+
+  /* ============================================================
+     11. Ready Card animation
+     ============================================================ */
+  const initReadyCard = () => {
+    const card = $('#readyCard');
+    if (!card) return;
+    if (!('IntersectionObserver' in window)) { card.classList.add('show'); return; }
+    const io = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { card.classList.add('show'); io.disconnect(); }
+    }, { threshold: .15 });
     io.observe(card);
-  }
-});
+  };
+
+  /* ============================================================
+     12. بناء HTML الديناميكي من settings.json
+     ============================================================ */
+  const populateDynamic = (cfg) => {
+    // عنوان البطاقة الرئيسية
+    const heroName = $('.hero-name');
+    if (heroName) heroName.textContent = `${cfg.herName} ❤️`;
+
+    const heroSub = $('.hero-sub');
+    if (heroSub) heroSub.textContent = `If you ever feel overwhelmed, open this page. I'm here — always. — ${cfg.hisSignature}`;
+
+    // support items
+    const supportList = $('.support-items');
+    if (supportList && cfg.supportItems?.length) {
+      supportList.innerHTML = cfg.supportItems.map(
+        it => `<div class="support-item"><span class="support-icon">${it.icon}</span><span>${it.text}</span></div>`
+      ).join('');
+    }
+
+    // grateful section
+    const gTitle = $('.grateful-title');
+    const gText  = $('.grateful-text');
+    const gSub   = $('.grateful-sub');
+    if (gTitle) gTitle.textContent = cfg.gratefulTitle;
+    if (gText)  gText.textContent  = cfg.gratefulText; // white-space: pre-line يُطبّق الأسطر
+    if (gSub)   gSub.textContent   = cfg.gratefulSub;
+
+    // distance
+    const dName = $$('.d-name');
+    const dKm   = $('.d-km');
+    if (dName[0]) dName[0].textContent = cfg.cityFrom;
+    if (dName[1]) dName[1].textContent = cfg.cityTo;
+    if (dKm)     dKm.textContent       = `${cfg.distanceKm} km`;
+
+    // footer
+    const footer = $('.page-footer');
+    if (footer) footer.textContent = `Made with endless care — ${cfg.hisSignature}`;
+  };
+
+  /* ============================================================
+     13. Service Worker
+     ============================================================ */
+  const registerSW = () => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () =>
+        navigator.serviceWorker.register('sw.js')
+          .then(r  => console.log('✅ SW:', r.scope))
+          .catch(e => console.warn('⚠️ SW failed', e))
+      );
+    }
+  };
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  (async () => {
+    const cfg = await loadConfig();
+
+    fixVH();
+    if (cfg) populateDynamic(cfg);
+
+    const lines   = cfg?.lines     || window.FALLBACK_LINES || [];
+    const breath  = cfg?.breathing || { inhale:4, hold1:4, exhale:6, hold2:0 };
+    const apiUrl  = cfg?.moodApiUrl || '';
+    const cplId   = cfg?.coupleId  || 'lojain_a23';
+    const meetDt  = cfg?.meetDateIso || '2025-03-21T06:09:00';
+
+    startCounter(meetDt);
+    initQuotes(lines);
+    initParticles();
+    initConfetti();
+    initBreathing(breath);
+    initMemo();
+    initScroll();
+    initMoodToy(apiUrl, cplId);
+    initReadyAnimation();
+    initReadyCard();
+    registerSW();
+  })();
+
+})();

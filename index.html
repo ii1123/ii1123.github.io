@@ -4,240 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lojain — A23</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg1: #0f1020;
-      --bg2: #1b1e3a;
-      --accent: #ff4d6d;
-      --text: #f7f7ff;
-      --muted: #cfd3ff;
-      --glass: rgba(255, 255, 255, .03);
-      --glass-bd: rgba(255, 255, 255, .08);
-      --shadow: 0 10px 40px rgba(0, 0, 0, .35);
-    }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Tajawal', system-ui, sans-serif;
-      background: radial-gradient(1200px circle at 20% 10%, rgba(255, 77, 109, .07), transparent 40%),
-                  radial-gradient(1000px circle at 90% 80%, rgba(207, 211, 255, .08), transparent 45%),
-                  linear-gradient(160deg, var(--bg1), var(--bg2));
-      color: var(--text);
-      overflow-x: hidden;
-    }
+  <!-- ↓ تغيير الخط: عدّل هنا فقط ↓ -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
 
-    .stars, .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle 6s linear infinite; }
-    @keyframes twinkle { 0% { opacity: 0; } 10% { opacity: 1; } 50% { opacity: .6; } 100% { opacity: 0; transform: translateY(40px); } }
-    .heart { position: absolute; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); animation: float 10s linear infinite; }
-    .heart::before, .heart::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; }
-    .heart::before { top: -6px; left: 0; } .heart::after { left: -6px; top: 0; }
-    @keyframes float { 0% { transform: translateY(0) rotate(45deg); opacity: 0; } 100% { transform: translateY(-110vh) rotate(45deg); opacity: 0; } }
-
-    .wrap { position: relative; z-index: 3; min-height: 100%; display: grid; place-items: center; padding: 24px; padding-bottom: 260px; }
-    .card { background: var(--glass); border: 1px solid var(--glass-bd); box-shadow: var(--shadow); border-radius: 28px; padding: 32px 28px; max-width: 760px; width: 100%; backdrop-filter: blur(12px); }
-    h1 { margin: 0 0 12px; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .subtitle { margin-bottom: 24px; font-size: 17px; color: var(--muted); }
-    .footer { margin-top: 24px; font-size: 13px; color: var(--muted); opacity: 0.7; text-align: center; }
-
-    .line { min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; text-align: center; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 20px; margin: 8px 0; }
-    .dots { margin-top: 16px; display: flex; justify-content: center; gap: 10px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .2); transition: all 0.3s; }
-    .dot.active { background: var(--accent); transform: scale(1.2); box-shadow: 0 0 8px var(--accent); }
-
-    .cta, .down {
-      display: block; padding: 14px 22px; border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, .2); text-decoration: none;
-      color: var(--text) !important; font-weight: 700; font-size: 15px;
-      background: rgba(255, 255, 255, .06); text-align: center; cursor: pointer;
-      width: 100%; max-width: 520px; margin: 12px auto;
-      transition: all .2s ease;
-    }
-    .cta:hover, .down:hover { background: rgba(255, 255, 255, .12); transform: translateY(-2px); border-color: var(--accent); }
-
-    /* Mood Toy */
-    .mood-toy {
-      position: fixed; right: 20px; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); z-index: 100;
-      display: flex; flex-direction: column; align-items: center; gap: 8px; 
-      padding: 14px 18px; border-radius: 60px;
-      background: rgba(20, 22, 45, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(16px);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .mood-toy:active { transform: scale(0.97); }
-    .toy-label { font-size: 13px; font-weight: 800; color: var(--muted); }
-    .toy-figure { width: 55px; height: 55px; }
-    .toy-svg { width: 100%; height: 100%; }
-    .face-sad { display: none; }
-    .mood-toy.sad .face-happy { display: none; }
-    .mood-toy.sad .face-sad { display: block; }
-    .mood-toy.happy { border-color: rgba(255, 200, 100, 0.5); box-shadow: 0 0 20px rgba(255, 200, 100, 0.3); }
-    .mood-toy.sad { border-color: rgba(100, 150, 255, 0.5); box-shadow: 0 0 20px rgba(100, 150, 255, 0.3); }
-
-    .since {
-      position: fixed !important; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      z-index: 9; background: rgba(15, 16, 32, 0.7); border: 1px solid var(--glass-bd);
-      backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 40px; font-size: 11px;
-    }
-
-    .notebook { max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: center; }
-    .title { font-size: 20px; font-weight: 800; color: var(--muted); margin-bottom: 15px; }
-    #memo { width: 100%; border-radius: 20px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-bd); padding: 16px; font-family: inherit; font-size: 15px; resize: vertical; }
-    #memo:focus { outline: none; border-color: var(--accent); }
-    button { background: linear-gradient(135deg, rgba(255,77,109,0.8), rgba(255,77,109,0.4)); border: none; color: white; font-weight: bold; cursor: pointer; padding: 12px 28px; border-radius: 40px; font-size: 15px; margin-top: 15px; display: inline-block; }
-    .memo-hint { font-size: 11px; color: #888; margin-top: 12px; }
-
-    .breathe { margin: 30px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-    .circle { width: 70px; height: 70px; border: 3px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: breathe 14s infinite; }
-    .circle-inner { width: 14px; height: 14px; background: var(--accent); border-radius: 50%; }
-    @keyframes breathe { 0%, 100% { transform: scale(1); } 28% { transform: scale(1.4); } 57% { transform: scale(1.4); } }
-    .breath-steps { font-size: 12px; color: var(--muted); }
-
-    .support { text-align: center; padding: 20px 8px; }
-    .support h3 { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
-    .support p { font-size: 15px; line-height: 1.8; color: var(--muted); margin: 8px 0; }
-
-    .section { position: relative; z-index: 2; padding: 20px 16px 100px; }
-
-    /* توسيط العناصر */
-    #readySection {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      width: 100% !important;
-    }
-
-    #readyCard {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      text-align: center !important;
-      width: 100% !important;
-      max-width: 550px !important;
-      margin: 0 auto !important;
-      padding: 30px 20px !important;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease;
-    }
-    #readyCard.show { opacity: 1; transform: translateY(0); }
-
-    .planet-scene {
-      position: relative !important;
-      width: 160px !important;
-      height: 160px !important;
-      margin: 0 auto !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .orbit-ring {
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      width: 140px !important;
-      height: 140px !important;
-      border-radius: 50% !important;
-      border: 2px dashed rgba(255,255,255,0.3) !important;
-      animation: spinRing 12s linear infinite !important;
-    }
-    @keyframes spinRing { to { transform: translate(-50%, -50%) rotate(360deg); } }
-    .planet { font-size: 56px !important; position: relative !important; z-index: 2 !important; animation: bob 3s ease-in-out infinite !important; }
-    @keyframes bob { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-    .rocket { position: absolute !important; font-size: 22px !important; top: -5px !important; left: 50% !important; transform: translateX(-50%) !important; animation: orbit 7s linear infinite !important; }
-    @keyframes orbit { 0% { transform: translateX(-50%) rotate(0deg) translateX(65px) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg) translateX(65px) rotate(-360deg); } }
-
-    .grateful-msg { text-align: center !important; margin: 0 auto !important; max-width: 450px !important; }
-    .grateful-title { font-size: 26px !important; font-weight: 900 !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .grateful-text { font-size: 16px !important; line-height: 1.8 !important; color: var(--muted) !important; }
-    .grateful-sub { font-size: 15px !important; color: var(--accent) !important; font-weight: 800 !important; margin-top: 12px !important; }
-
-    .distance-widget {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 15px !important;
-      margin: 20px auto !important;
-      padding: 12px 20px !important;
-      background: rgba(255,255,255,0.06) !important;
-      border-radius: 50px !important;
-      width: auto !important;
-      min-width: 260px !important;
-    }
-    .distance-city { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 5px !important; }
-    .city-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; background: var(--accent) !important; box-shadow: 0 0 8px var(--accent) !important; animation: pulseDot 1.5s infinite !important; }
-    .city-dot--end { background: #cfd3ff !important; box-shadow: 0 0 8px #cfd3ff !important; }
-    @keyframes pulseDot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-    .city-name { font-size: 12px !important; color: var(--muted) !important; font-weight: 700 !important; }
-    .distance-track { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 6px !important; }
-    .distance-line { width: 100% !important; height: 2px !important; background: linear-gradient(90deg, var(--accent), #cfd3ff) !important; }
-    .distance-plane { font-size: 18px !important; animation: flyPlane 2.5s ease-in-out infinite !important; }
-    @keyframes flyPlane { 0% { transform: translateX(-25px); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateX(25px); opacity: 0; } }
-    .distance-label { font-size: 20px !important; font-weight: 900 !important; color: var(--text) !important; }
-
-    @media (max-width: 600px) {
-      .mood-toy { right: 12px; bottom: 85px; padding: 10px 14px; }
-      .mood-toy .toy-figure { width: 45px; height: 45px; }
-      .since { right: 12px; bottom: 18px; font-size: 9px; padding: 5px 10px; }
-      .planet-scene { width: 130px !important; height: 130px !important; }
-      .planet { font-size: 48px !important; }
-      .rocket { font-size: 18px !important; animation: orbit 7s linear infinite !important; }
-      @keyframes orbit { 0% { transform: translateX(-50%) rotate(0deg) translateX(55px) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg) translateX(55px) rotate(-360deg); } }
-      .grateful-title { font-size: 22px !important; }
-      .grateful-text { font-size: 14px !important; }
-      .distance-widget { gap: 10px; padding: 10px 15px; min-width: 220px; }
-      .distance-label { font-size: 16px; }
-      .city-name { font-size: 10px; }
-    }
-  </style>
+  <link rel="stylesheet"   href="style.css" />
+  <link rel="manifest"     href="manifest.json" />
+  <meta name="theme-color" content="#ff4d6d" />
 </head>
-
 <body>
-  <div class="stars" id="stars"></div>
-  <div class="hearts" id="hearts"></div>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>Lojain ❤️</h1>
-      <p class="subtitle">If you ever feel overwhelmed, open this page. I'm here — always. — A23</p>
-      <div class="line" id="line"></div>
-      <div class="dots" id="dots"></div>
-      <a class="cta" href="#" id="confettiBtn">✨ A small touch of love ✨</a>
-      <a id="downLink" class="down" href="#readySection">↓ Scroll when you're ready ↓</a>
+<!-- ══════════════════════════════════════════
+     BACKGROUND LAYERS
+══════════════════════════════════════════ -->
+<div class="aurora">
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+</div>
+<div class="stars"  id="stars"></div>
+<div class="hearts" id="hearts"></div>
 
-      <div class="support">
-        <h3>💫 Read this slowly whenever you need it 💫</h3>
-        <p>• You're not alone. I'm with you — now and forever.</p>
-        <p>• Whatever happened, we'll face it together. One step at a time.</p>
-        <p>• You are loved, you are safe, and your feelings matter to me.</p>
-        <p>• Text me when you're ready. Or just read this and breathe — I'm here.</p>
-        <div class="breathe">
-          <div class="circle"><div class="circle-inner"></div></div>
-          <div class="breath-steps">🌬️ Inhale 4 • Hold 4 • Exhale 6 — repeat 🌬️</div>
-        </div>
-      </div>
-      <div class="footer">Made with endless care — A23</div>
+<!-- ══════════════════════════════════════════
+     MAIN PAGE
+══════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- ── HERO CARD ── -->
+  <div class="card-shell hero-card">
+    <!-- النص يُملأ من settings.json عبر JS -->
+    <div class="hero-name">Lojain ❤️</div>
+    <p class="hero-sub">If you ever feel overwhelmed, open this page. I'm here — always. — A23</p>
+
+    <div class="quote-wrap">
+      <div class="quote-shimmer"></div>
+      <div class="quote-text" id="quoteText" aria-live="polite"></div>
+    </div>
+    <div class="dots" id="dots"></div>
+
+    <div class="btn-row">
+      <a class="btn btn-glow" href="#" id="confettiBtn">✨ A little touch of love ✨</a>
+      <a class="btn" href="#readySection" id="downLink">↓ Scroll when you're ready ↓</a>
     </div>
   </div>
 
-  <section class="section" id="readySection">
-    <div class="card" id="readyCard">
-      <div class="planet-scene">
-        <div class="orbit-ring"></div>
-        <div class="planet">🪐</div>
-        <div class="rocket">🚀</div>
+  <!-- ── SUPPORT CARD ── -->
+  <div class="card-shell support-card">
+    <p class="support-title">💫 Read this slowly, whenever you need it 💫</p>
+
+    <!-- ↓ إضافة / تعديل البنود: في settings.json → supportItems ↓ -->
+    <div class="support-items">
+      <div class="support-item"><span class="support-icon">🤝</span><span>You're not alone. I'm with you — now and forever.</span></div>
+      <div class="support-item"><span class="support-icon">🌊</span><span>Whatever happened, we'll face it together. One step at a time.</span></div>
+      <div class="support-item"><span class="support-icon">💖</span><span>You are loved, you are safe, and your feelings matter to me.</span></div>
+      <div class="support-item"><span class="support-icon">📱</span><span>Text me when you're ready. Or just read this and breathe — I'm here.</span></div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         BREATHING SECTION
+         ↓ أوقات التنفس: settings.json → breathing ↓
+         inhale / hold1 / exhale / hold2
+    ══════════════════════════════════════ -->
+    <div class="breathe-wrap">
+
+      <div class="breathe-scene">
+        <!-- حلقة خارجية ثابتة -->
+        <div class="breathe-ring-outer"></div>
+
+        <!-- arc يدور مع الدورة -->
+        <div class="breathe-ring-track">
+          <svg viewBox="0 0 120 120">
+            <!-- المسار الرمادي -->
+            <circle cx="60" cy="60" r="55"
+              fill="none"
+              stroke="rgba(255,77,109,.12)"
+              stroke-width="3"/>
+            <!-- arc الملوّن — stroke-dashoffset يُحدَّث بـ JS -->
+            <circle cx="60" cy="60" r="55"
+              fill="none"
+              stroke="var(--accent)"
+              stroke-width="3"
+              class="breathe-arc"/>
+          </svg>
+        </div>
+
+        <!-- النقطة المتنفسة -->
+        <div class="breathe-dot">
+          <div class="breathe-ripple"></div>
+        </div>
       </div>
-      <div class="grateful-msg">
-        <h2 class="grateful-title">She became mine. 🌙</h2>
+
+      <!-- ↓ هذه النصوص تتغير تلقائياً أثناء الدورة ↓ -->
+      <div class="breathe-countdown" id="breatheCountdown"></div>
+      <div class="breathe-phase-label">🌬️ Getting ready...</div>
+      <div class="breathe-phase-sub">Follow the dot</div>
+
+    </div>
+  </div>
+
+  <!-- ── READY SECTION ── -->
+  <div class="ready-section" id="readySection">
+    <div class="card-shell" id="readyCard">
+
+      <!-- ── READY ANIMATION ── -->
+      <div class="ready-animation-wrap">
+        <div id="ready-animation" aria-hidden="true"></div>
+      </div>
+
+      <!-- النصوص — وسط تماماً -->
+      <div class="grateful-content">
+        <div class="grateful-title">She became mine. 🌙</div>
         <p class="grateful-text">
           I don't take it for granted — not even for a second.<br>
           Out of everyone in this world, you chose me.<br>
@@ -245,220 +121,98 @@
         </p>
         <p class="grateful-sub">✨ You are the best thing that's ever been mine. ❤️ ✨</p>
       </div>
-      <div class="distance-widget">
-        <div class="distance-city"><span class="city-dot"></span><span class="city-name">Al Khobar</span></div>
-        <div class="distance-track"><div class="distance-line"></div><div class="distance-plane">✈️</div><div class="distance-label">380 km</div></div>
-        <div class="distance-city"><span class="city-dot city-dot--end"></span><span class="city-name">Riyadh</span></div>
+
+      <!-- شريط المسافة مع سيارة تذهب وتجي -->
+      <div class="distance-bar">
+        <div class="d-city-label">
+          <div class="d-heart d-heart--blue">💙</div>
+          <div class="d-name">Al Khobar</div>
+        </div>
+
+        <div class="d-track">
+          <div class="d-km">380 km</div>
+          <div class="d-runway">
+            <div class="d-line"></div>
+            <div class="d-line-glow"></div>
+            <div class="d-road-dots"></div>
+            <span class="d-car-shuttle" aria-hidden="true">✈️</span>
+          </div>
+        </div>
+
+        <div class="d-city-label">
+          <div class="d-heart d-heart--pink">💗</div>
+          <div class="d-name">Riyadh</div>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <div class="notebook">
-    <div class="title">📖 Memorize my words 📖</div>
+    </div>
+  </div>
+
+  <!-- ── NOTEBOOK ── -->
+  <div class="card-shell notebook">
+    <p class="notebook-title">📖 Your private space — write freely 📖</p>
     <textarea id="memo" placeholder="Write whatever you feel... I'm listening."></textarea>
-    <button id="saveMemo">💾 Save</button>
-    <div class="memo-hint">Saved only on this device — your private space</div>
+    <button class="save-btn" id="saveMemo">💾 Save</button>
+    <p class="memo-hint">Saved only on this device — your private space</p>
   </div>
 
-  <div class="since"><strong id="sinceCounter">—</strong></div>
+  <div class="page-footer">Made with endless care — A23</div>
+</div><!-- /page -->
 
-  <div class="mood-toy" id="moodToy">
-    <div class="toy-label" id="toyLabel">💭 My Mood</div>
-    <div class="toy-figure">
-      <svg viewBox="0 0 200 200" class="toy-svg">
-        <circle cx="100" cy="100" r="65" fill="#FFE5B4" stroke="#D4A373" stroke-width="3"/>
-        <g class="face-happy">
-          <circle cx="70" cy="85" r="8" fill="#5D3A1A"/>
-          <circle cx="130" cy="85" r="8" fill="#5D3A1A"/>
-          <circle cx="70" cy="88" r="3" fill="white"/>
-          <circle cx="130" cy="88" r="3" fill="white"/>
-          <path d="M70 125 Q100 150 130 125" fill="none" stroke="#5D3A1A" stroke-width="6" stroke-linecap="round"/>
-        </g>
-        <g class="face-sad">
-          <circle cx="72" cy="88" r="8" fill="#5D3A1A"/>
-          <circle cx="128" cy="88" r="8" fill="#5D3A1A"/>
-          <circle cx="72" cy="91" r="3" fill="white"/>
-          <circle cx="128" cy="91" r="3" fill="white"/>
-          <path d="M75 128 Q100 115 125 128" fill="none" stroke="#5D3A1A" stroke-width="5" stroke-linecap="round"/>
-          <path d="M95 72 L100 78 L105 72" fill="none" stroke="#5D3A1A" stroke-width="3"/>
-        </g>
-      </svg>
-    </div>
+<!-- ══════════════════════════════════════════
+     FIXED WIDGETS
+══════════════════════════════════════════ -->
+
+<!-- عدّاد الوقت -->
+<div class="since"><strong id="sinceCounter">—</strong></div>
+
+<!-- أنيميشن Lottie فوق دمية المزاج -->
+<div id="lottie-widget">
+  <div id="lottie-anim"></div>
+</div>
+
+<!-- دمية المزاج -->
+<div class="mood-toy" id="moodToy" role="button" aria-pressed="false" tabindex="0" aria-label="Toggle mood">
+  <div class="toy-label" id="toyLabel">💭 My Mood</div>
+  <div class="toy-figure">
+    <svg viewBox="0 0 200 200" class="toy-svg" aria-hidden="true">
+      <circle cx="100" cy="100" r="65" fill="#FFE5B4" stroke="#D4A373" stroke-width="2.5"/>
+      <!-- وجه سعيد -->
+      <g class="face-happy">
+        <ellipse cx="72"  cy="86" rx="9" ry="9.5" fill="#5D3A1A"/>
+        <ellipse cx="128" cy="86" rx="9" ry="9.5" fill="#5D3A1A"/>
+        <circle  cx="69"  cy="83" r="3.5" fill="white"/>
+        <circle  cx="125" cy="83" r="3.5" fill="white"/>
+        <path d="M72 122 Q100 148 128 122" fill="none" stroke="#5D3A1A" stroke-width="6" stroke-linecap="round"/>
+        <ellipse cx="58"  cy="108" rx="12" ry="7" fill="rgba(255,100,100,.25)"/>
+        <ellipse cx="142" cy="108" rx="12" ry="7" fill="rgba(255,100,100,.25)"/>
+      </g>
+      <!-- وجه حزين -->
+      <g class="face-sad">
+        <ellipse cx="72"  cy="88" rx="9" ry="9.5" fill="#5D3A1A"/>
+        <ellipse cx="128" cy="88" rx="9" ry="9.5" fill="#5D3A1A"/>
+        <circle  cx="69"  cy="85" r="3.5" fill="white"/>
+        <circle  cx="125" cy="85" r="3.5" fill="white"/>
+        <path d="M76 130 Q100 116 124 130" fill="none" stroke="#5D3A1A" stroke-width="5.5" stroke-linecap="round"/>
+        <ellipse cx="83"  cy="102" rx="4" ry="6" fill="rgba(100,160,255,.55)"/>
+        <ellipse cx="117" cy="102" rx="4" ry="6" fill="rgba(100,160,255,.55)"/>
+        <path d="M88 70 Q95 76 102 70" fill="none" stroke="#5D3A1A" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    </svg>
   </div>
+</div>
 
-  <script>
-    // Rotating Lines
-    let lines = [
-      "If anything feels heavy today, hand it to me — I'll carry it with you.",
-      "No matter what, you're not facing this alone.",
-      "I'm proud of you, even on the days you can't see it.",
-      "Take your time. I'll wait. I'm not going anywhere.",
-      "Your feelings are safe with me — always.",
-      "You are loved more than any bad moment can measure.",
-      "Breathe. One small step is enough for today.",
-      "If you need me at 3AM or 3PM — I'm there.",
-      "I choose you on the bright days and the stormy ones.",
-      "You and I — team forever."
-    ];
-    let idx = 0;
-    const lineEl = document.getElementById('line');
-    const dotsEl = document.getElementById('dots');
-    lines.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); dotsEl.appendChild(d); });
-    function renderLine(t) { lineEl.innerHTML = ''; const s = document.createElement('span'); s.textContent = t; lineEl.appendChild(s); }
-    function setActiveDot(i) { Array.from(dotsEl.children).forEach((d, k) => d.classList.toggle('active', k === i)); }
-    function nextLine() { renderLine(lines[idx]); setActiveDot(idx); idx = (idx + 1) % lines.length; }
-    nextLine(); setInterval(nextLine, 2800);
-
-    // Stars
-    for (let i = 0; i < 80; i++) {
-      const s = document.createElement('div'); s.className = 'star';
-      s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 100 + 'vh';
-      s.style.animationDelay = (Math.random() * 8).toFixed(2) + 's';
-      document.getElementById('stars').appendChild(s);
-    }
-
-    // Hearts
-    setInterval(() => {
-      const h = document.createElement('div'); h.className = 'heart';
-      h.style.left = Math.random() * 100 + 'vw';
-      h.style.animationDuration = (8 + Math.random() * 6).toFixed(2) + 's';
-      document.getElementById('hearts').appendChild(h);
-      setTimeout(() => h.remove(), 12000);
-    }, 700);
-
-    // Confetti
-    document.getElementById('confettiBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      for (let i = 0; i < 120; i++) {
-        const p = document.createElement('div');
-        p.style.cssText = `position:fixed;width:7px;height:10px;z-index:9999;pointer-events:none;left:${window.innerWidth / 2 + (Math.random() * 80 - 40)}px;top:${window.innerHeight / 2 + (Math.random() * 30 - 15)}px;background:${['#ff4d6d', '#ffd166', '#06d6a0', '#4cc9f0', '#f72585'][Math.floor(Math.random() * 5)]};border-radius:2px;`;
-        document.body.appendChild(p);
-        let dx = (Math.random() - 0.5) * 12, dy = (Math.random() - 0.9) * 14, x = 0, y = 0, life = 0;
-        const t = setInterval(() => {
-          life++; x += dx; y += dy + life * 0.1;
-          p.style.transform = `translate(${x}px,${y}px) rotate(${life * 12}deg)`;
-          p.style.opacity = 0.9 - life / 70;
-          if (life > 70) { clearInterval(t); p.remove(); }
-        }, 16);
-      }
-    });
-
-    // Memo
-    const memo = document.getElementById('memo');
-    const saveMemo = document.getElementById('saveMemo');
-    try { memo.value = localStorage.getItem('memo_lojain') || ''; } catch(e) {}
-    saveMemo.addEventListener('click', () => {
-      try { localStorage.setItem('memo_lojain', memo.value); saveMemo.textContent = '✓ Saved!'; setTimeout(() => saveMemo.textContent = '💾 Save', 1500); } catch(e) {}
-    });
-
-    // Since Counter
-    function updateSince() {
-      const start = new Date('2025-03-21T06:09:00');
-      const diff = Math.max(0, Date.now() - start);
-      const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('sinceCounter').innerHTML = `✨ Since we met: ${d}d ${h}h ${m}m ${s}s ✨`;
-    }
-    updateSince(); setInterval(updateSince, 1000);
-
-    // Smooth Scroll
-    document.getElementById('downLink').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('readySection').scrollIntoView({ behavior: 'smooth' }); });
-
-    // Mood Toy Sync - FULLY WORKING
-    (function() {
-      const toy = document.getElementById('moodToy');
-      const label = document.getElementById('toyLabel');
-      if (!toy) return;
-      
-      const API_URL = 'https://script.google.com/macros/s/AKfycbzSthLe4Fp2asZLWnQw8UnjTjlvv9ykTGqU-TKQn7z9Xhd0I_p1GqIhBI-7cVSwEQ588Q/exec';
-      const COUPLE_ID = 'lojain_a23';
-      const STORAGE_KEY = 'lojain_mood';
-
-      function updateUI(mood) {
-        console.log('Updating UI to:', mood);
-        if (mood === 'sad') {
-          toy.classList.add('sad');
-          toy.classList.remove('happy');
-          label.innerHTML = '😢 Mood: Sad';
-          // تغيير لون الوجه
-          const head = toy.querySelector('#head');
-          if (head) head.setAttribute('fill', '#d0e1ff');
-        } else {
-          toy.classList.add('happy');
-          toy.classList.remove('sad');
-          label.innerHTML = '😊 Mood: Happy';
-          // تغيير لون الوجه
-          const head = toy.querySelector('#head');
-          if (head) head.setAttribute('fill', '#ffcfdf');
-        }
-      }
-
-      // تحميل الحالة المخزنة محلياً
-      const cached = localStorage.getItem(STORAGE_KEY);
-      if (cached === 'sad' || cached === 'happy') {
-        updateUI(cached);
-      } else {
-        updateUI('happy');
-      }
-
-      async function fetchMood() {
-        try {
-          console.log('Fetching mood from server...');
-          const res = await fetch(`${API_URL}?action=get&id=${COUPLE_ID}&t=${Date.now()}`);
-          const data = await res.json();
-          console.log('Server response:', data);
-          if (data.success && data.mood) {
-            localStorage.setItem(STORAGE_KEY, data.mood);
-            updateUI(data.mood);
-          }
-        } catch(error) {
-          console.log('Fetch failed, using cached mood');
-        }
-      }
-
-      async function updateMood(mood) {
-        try {
-          console.log('Updating mood to:', mood);
-          localStorage.setItem(STORAGE_KEY, mood);
-          updateUI(mood);
-          const response = await fetch(`${API_URL}?action=set&id=${COUPLE_ID}&mood=${mood}&t=${Date.now()}`);
-          const result = await response.json();
-          console.log('Update response:', result);
-          
-          // إظهار تأثير مؤقت
-          label.style.opacity = '0.6';
-          setTimeout(() => { label.style.opacity = '1'; }, 200);
-        } catch(error) {
-          console.log('Update failed:', error);
-        }
-      }
-
-      // عند الضغط على الوجه
-      toy.addEventListener('click', () => {
-        const isSad = toy.classList.contains('sad');
-        const newMood = isSad ? 'happy' : 'sad';
-        updateMood(newMood);
-      });
-
-      // جلب الحالة من السيرفر عند بدء التشغيل
-      fetchMood();
-      
-      // مزامنة كل 5 ثواني
-      setInterval(fetchMood, 5000);
-    })();
-
-    // Intersection Observer for readyCard
-    const readyCard = document.getElementById('readyCard');
-    if (readyCard) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            readyCard.classList.add('show');
-            observer.disconnect();
-          }
-        });
-      }, { threshold: 0.2 });
-      observer.observe(readyCard);
-    }
-  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script src="script.js"></script>
+<script>
+  // ── تشغيل الأنيميشن ──
+  lottie.loadAnimation({
+    container: document.getElementById('lottie-anim'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'animation.json'
+  });
+</script>
 </body>
 </html>

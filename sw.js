@@ -1,113 +1,83 @@
-/* ========== Lojain SW — offline + safe caching ========== */
+/* ============================================================
+   sw.js — Lojain Service Worker
+   ============================================================ */
 
-const CACHE_NAME = 'lojain-cache-v2';
-
-/* عدّل هذه القائمة حسب ملفاتك الفعلية */
-const CORE_ASSETS = [
+const CACHE = 'lojain-v3';
+const CORE  = [
   './index.html',
-  './style.css?v=3',
-  './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  // أزل السطرين التاليين إذا ما عندك هالملفات
+  './style.css',
   './script.js',
   './settings.json',
+  './manifest.json',
 ];
 
-/* صفحة Offline مبسطة */
-const OFFLINE_HTML = `
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+const OFFLINE_PAGE = `<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Offline</title>
 <style>
-  html,body{height:100%;margin:0;background:#0f1020;color:#f7f7ff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:grid;place-items:center}
-  .card{max-width:540px;padding:24px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-  h1{margin:0 0 8px}p{margin:8px 0;color:#cfd3ff}
-  button{margin-top:12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-weight:700;cursor:pointer}
+  html,body{height:100%;margin:0;background:#080a18;color:#f0f0ff;
+  font-family:system-ui,sans-serif;display:grid;place-items:center}
+  .box{max-width:480px;padding:28px;border-radius:20px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);text-align:center}
+  h2{margin:0 0 10px}p{color:#b8bcee;margin:8px 0;font-size:14px}
+  button{margin-top:14px;padding:10px 20px;border-radius:40px;
+  border:1px solid rgba(255,255,255,.2);background:rgba(255,77,109,.3);
+  color:#fff;font-weight:700;cursor:pointer;font-size:14px}
 </style>
-<div class="card">
-  <h1>You’re offline</h1>
-  <p>ما فيه اتصال حاليًا. جرّب تعيد التحميل لما يرجع النت.</p>
+<div class="box">
+  <h2>📴 You're offline</h2>
+  <p>No connection right now. The page will reload when you're back.</p>
   <button onclick="location.reload()">Retry</button>
 </div>`;
 
-/* ===== Helpers ===== */
-const isSameOrigin = (url) => {
-  try { return new URL(url, self.location.href).origin === self.location.origin; }
-  catch { return false; }
-};
-const okToCache = (res) => res && res.status === 200 && res.type !== 'opaque';
+const ok = (r) => r && r.status === 200 && r.type !== 'opaque';
 
-/* ===== Install ===== */
-self.addEventListener('install', (event) => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-
-    // إضافة آمنة: ما تفشل حتى لو ملف ناقص
-    await Promise.allSettled(
-      CORE_ASSETS.map((url) =>
-        fetch(url, { cache: 'no-cache' }).then((res) => okToCache(res) && cache.put(url, res.clone()))
-      )
-    );
+self.addEventListener('install', e => {
+  e.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await Promise.allSettled(CORE.map(url =>
+      fetch(url, { cache:'no-cache' }).then(r => ok(r) && cache.put(url, r))
+    ));
   })());
   self.skipWaiting();
 });
 
-/* ===== Activate ===== */
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))))
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.map(k => k !== CACHE && caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-/* ===== Fetch ===== */
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-
-  // لا نتعامل مع غير GET (POST/PUT…)
+self.addEventListener('fetch', e => {
+  const req = e.request;
   if (req.method !== 'GET') return;
 
-  // 1) تنقّل الصفحات: Network-first → Cache → Offline HTML
-  if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
-    event.respondWith((async () => {
+  // HTML pages → Network first
+  if (req.mode === 'navigate') {
+    e.respondWith((async () => {
       try {
-        const fresh = await fetch(req, { cache: 'no-store' });
-        const cache = await caches.open(CACHE_NAME);
-        if (okToCache(fresh)) cache.put(req, fresh.clone());
+        const fresh = await fetch(req, { cache:'no-store' });
+        const cache = await caches.open(CACHE);
+        if (ok(fresh)) cache.put(req, fresh.clone());
         return fresh;
       } catch {
         const cached = await caches.match(req) || await caches.match('./index.html');
-        return cached || new Response(OFFLINE_HTML, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+        return cached || new Response(OFFLINE_PAGE, { headers:{'Content-Type':'text/html;charset=utf-8'} });
       }
     })());
     return;
   }
 
-  // 2) أصول ثابتة من نفس الدومين: Cache-first + تحديث بالخلفية
-  if (isSameOrigin(req.url) && /\.(css|js|png|jpg|jpeg|gif|svg|webp|ico|json|woff2?)$/i.test(req.url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
+  // Static assets → Cache first + background update
+  if (/\.(css|js|json|png|jpg|webp|svg|ico|woff2?)$/i.test(req.url)) {
+    e.respondWith((async () => {
+      const cache  = await caches.open(CACHE);
       const cached = await cache.match(req);
-      const networkPromise = fetch(req).then((res) => {
-        if (okToCache(res)) cache.put(req, res.clone());
-        return res;
-      }).catch(() => null);
-      return cached || networkPromise || fetch(req);
+      const net    = fetch(req).then(r => { if (ok(r)) cache.put(req, r.clone()); return r; }).catch(()=>null);
+      return cached || net || fetch(req);
     })());
-    return;
   }
-
-  // 3) باقي الطلبات: Stale-While-Revalidate خفيف
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(req);
-    const network = fetch(req).then((res) => {
-      if (okToCache(res)) cache.put(req, res.clone());
-      return res;
-    }).catch(() => null);
-    return cached || network || new Response('Offline', { status: 503, statusText: 'Offline' });
-  })());
 });
