@@ -396,71 +396,30 @@ body::before {
 .d-km { font-size: 17px; font-weight: 900; color: var(--text); }
 
 .d-runway {
-  position: relative; width: 100%; height: 28px;
+  position: relative; width: 100%; height: 18px;
   overflow: visible;
 }
-.d-line {
-  position: absolute; top: 50%; left: 0; right: 0;
-  height: 2px; transform: translateY(-50%);
-  background: linear-gradient(90deg, #8ab4f8, var(--accent2));
-  border-radius: 2px;
-  opacity: 0.5;
-}
-.d-road-dots {
+.d-road {
   position: absolute;
-  top: 50%;
-  left: 8%;
-  right: 8%;
-  height: 6px;
-  transform: translateY(-50%);
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,.88) 0 12px,
-      transparent 12px 22px
-    );
-  opacity: 0.55;
-  border-radius: 999px;
-}
-.d-line-glow {
-  position: absolute; top: 50%; left: 0; right: 0;
-  height: 2px; transform: translateY(-50%);
-  background: linear-gradient(90deg, transparent, rgba(255,143,171,.7), transparent);
-  background-size: 60% 100%;
-  animation: lineGlow 2s linear infinite;
-  border-radius: 2px;
-}
-@keyframes lineGlow {
-  0%   { background-position: -60% 0; }
-  100% { background-position: 160% 0; }
-}
-
-/* السيارة — تروح وتجي */
-.d-car-shuttle {
-  position: absolute;
-  font-size: 18px;
-  line-height: 1;
   top: 50%;
   left: 0;
-  margin-top: -10px;
-  width: 22px;
-  text-align: center;
-  animation: carShuttle 4.2s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px rgba(255,143,171,.9));
-  z-index: 5;
-  display: block;
-  transform-origin: center;
-}
-@keyframes carShuttle {
-  0%    { left: 0%;   transform: translateY(0) scaleX(-1); opacity: 0; }
-  5%    { opacity: 1; }
-  22%   { transform: translateY(-1px) scaleX(-1); opacity: 1; }
-  45%   { left: 85%;  transform: translateY(0) scaleX(-1); opacity: 1; }
-  50%   { left: 85%;  transform: translateY(0) scaleX(1); opacity: 0.45; }
-  55%   { opacity: 1; }
-  78%   { transform: translateY(-1px) scaleX(1); opacity: 1; }
-  95%   { left: 0%;   transform: translateY(0) scaleX(1); opacity: 1; }
-  100%  { left: 0%;   transform: translateY(0) scaleX(-1); opacity: 0; }
+  right: 0;
+  height: 8px;
+  transform: translateY(-50%);
+  background:
+    linear-gradient(90deg, rgba(138,180,248,.18), rgba(255,143,171,.22)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.86) 0 14px,
+      transparent 14px 26px
+    );
+  background-size: 100% 100%, 100% 2px;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05) inset,
+    0 0 16px rgba(255,143,171,.12);
 }
 
 /* ================================================
