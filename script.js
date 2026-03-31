@@ -460,6 +460,122 @@
   };
 
   /* ============================================================
+     12. Kiriko Suzu button
+     ============================================================ */
+  const initLoveSuzu = () => {
+    const btn = $('#loveSuzuBtn');
+    const flash = $('#loveFlash');
+    const audio = $('#loveAudio');
+    if (!btn || !flash) return;
+
+    btn.addEventListener('click', () => {
+      const rect = btn.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      flash.innerHTML = '';
+      flash.style.opacity = '1';
+
+      const screen = document.createElement('div');
+      screen.style.cssText = `
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        background:
+          radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,.95) 0%, rgba(255,255,255,.82) 7%, rgba(215,245,255,.38) 16%, transparent 30%),
+          linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+        opacity:0;
+      `;
+
+      const core = document.createElement('div');
+      core.style.cssText = `
+        position:fixed;
+        left:${x}px;
+        top:${y}px;
+        width:44px;
+        height:44px;
+        margin-left:-22px;
+        margin-top:-22px;
+        border-radius:50%;
+        pointer-events:none;
+        background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,.98) 58%, rgba(179,239,255,.62) 78%, rgba(179,239,255,0) 100%);
+        box-shadow:0 0 18px rgba(255,255,255,.95), 0 0 44px rgba(179,239,255,.65), 0 0 78px rgba(255,255,255,.32);
+        opacity:0;
+        transform:scale(.18);
+      `;
+
+      const ring = document.createElement('div');
+      ring.style.cssText = `
+        position:fixed;
+        left:${x}px;
+        top:${y}px;
+        width:90px;
+        height:90px;
+        margin-left:-45px;
+        margin-top:-45px;
+        border-radius:50%;
+        border:4px solid rgba(235,250,255,.95);
+        box-shadow:0 0 22px rgba(255,255,255,.55), 0 0 46px rgba(165,236,255,.28);
+        pointer-events:none;
+        opacity:0;
+        transform:scale(.18);
+      `;
+
+      flash.append(screen, core, ring);
+
+      if (screen.animate) {
+        screen.animate(
+          [
+            { opacity: 0 },
+            { opacity: 0.95, offset: 0.12 },
+            { opacity: 0.55, offset: 0.3 },
+            { opacity: 0 }
+          ],
+          { duration: 700, easing: 'ease-out' }
+        );
+        core.animate(
+          [
+            { opacity: 0, transform: 'scale(.18)' },
+            { opacity: 1, transform: 'scale(1.18)', offset: 0.14 },
+            { opacity: 0, transform: 'scale(2.1)' }
+          ],
+          { duration: 760, easing: 'ease-out' }
+        );
+        ring.animate(
+          [
+            { opacity: 0, transform: 'scale(.18)' },
+            { opacity: 0.95, transform: 'scale(.75)', offset: 0.18 },
+            { opacity: 0, transform: 'scale(4.4)' }
+          ],
+          { duration: 820, easing: 'ease-out' }
+        );
+        btn.animate(
+          [
+            { transform: 'scale(1) translateY(0)' },
+            { transform: 'scale(1.12) translateY(-1px)', offset: 0.3 },
+            { transform: 'scale(.97) translateY(0)', offset: 0.52 },
+            { transform: 'scale(1) translateY(0)' }
+          ],
+          { duration: 620, easing: 'cubic-bezier(.22,.8,.2,1)' }
+        );
+      }
+
+      setTimeout(() => {
+        flash.style.opacity = '0';
+        flash.innerHTML = '';
+      }, 900);
+
+      if (audio) {
+        try {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } catch (_) {}
+      }
+    });
+  };
+
+  /* ============================================================
      11. Ready animation
      ============================================================ */
   const initReadyAnimation = () => {
@@ -564,6 +680,7 @@
     initMemoryBook();
     initDailyMessage(quoteApi);
     initMoodToy(apiUrl, cplId);
+    initLoveSuzu();
     initReadyAnimation();
     initReadyCard();
     registerSW();

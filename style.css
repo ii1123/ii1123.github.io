@@ -632,6 +632,144 @@ body::before {
   font-size: 11px; color: var(--muted);
 }
 
+.love-suzu-btn {
+  position: fixed;
+  left: 16px;
+  bottom: calc(18px + env(safe-area-inset-bottom,0));
+  z-index: 10;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(190, 120, 255, .48);
+  background: linear-gradient(135deg, rgba(90, 40, 140, .72), rgba(164, 96, 255, .24));
+  color: #f7e9ff;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05) inset,
+    0 0 24px rgba(143, 76, 255, .18);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.love-suzu-btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(218, 163, 255, .72);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06) inset,
+    0 0 32px rgba(168, 85, 247, .28);
+}
+.love-suzu-btn.pulse {
+  animation: loveBtnPulse .62s cubic-bezier(.22,.8,.2,1);
+}
+@keyframes loveBtnPulse {
+  0% {
+    transform: scale(1) translateY(0);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.05) inset,
+      0 0 24px rgba(143, 76, 255, .18);
+  }
+  30% {
+    transform: scale(1.12) translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.14) inset,
+      0 0 18px rgba(255,255,255,.5),
+      0 0 40px rgba(190, 120, 255, .44);
+  }
+  52% {
+    transform: scale(.97) translateY(0);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.08) inset,
+      0 0 12px rgba(255,255,255,.2),
+      0 0 22px rgba(190, 120, 255, .2);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.05) inset,
+      0 0 24px rgba(143, 76, 255, .18);
+  }
+}
+
+.love-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  --flash-x: 88px;
+  --flash-y: calc(100% - 74px);
+}
+.love-flash.show .suzu-impact-screen {
+  animation: suzuImpactScreen .7s ease-out;
+}
+.love-flash.show .suzu-impact-core {
+  animation: suzuImpactCore .78s ease-out;
+}
+.love-flash.show .suzu-impact-ring {
+  animation: suzuImpactRing .82s ease-out;
+}
+
+.suzu-impact-screen,
+.suzu-impact-core,
+.suzu-impact-ring {
+  position: absolute;
+  left: var(--flash-x);
+  top: var(--flash-y);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.suzu-impact-screen {
+  inset: 0;
+  left: 0;
+  top: 0;
+  transform: none;
+  background:
+    radial-gradient(circle at var(--flash-x) var(--flash-y), rgba(255,255,255,.96) 0%, rgba(255,255,255,.78) 7%, rgba(215,246,255,.36) 16%, transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+}
+
+.suzu-impact-core {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,.98) 58%, rgba(179,239,255,.62) 78%, rgba(179,239,255,0) 100%);
+  box-shadow:
+    0 0 18px rgba(255,255,255,.95),
+    0 0 44px rgba(179,239,255,.65),
+    0 0 78px rgba(255,255,255,.32);
+}
+
+.suzu-impact-ring {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid rgba(235,250,255,.95);
+  box-shadow:
+    0 0 22px rgba(255,255,255,.55),
+    0 0 46px rgba(165,236,255,.28);
+}
+
+@keyframes suzuImpactScreen {
+  0% { opacity: 0; }
+  12% { opacity: .95; }
+  30% { opacity: .55; }
+  100% { opacity: 0; }
+}
+
+@keyframes suzuImpactCore {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.18); }
+  14% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.1); }
+}
+
+@keyframes suzuImpactRing {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.18); }
+  18% { opacity: .95; transform: translate(-50%, -50%) scale(.75); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(4.4); }
+}
+
 .mood-toy {
   position: fixed; right: 16px;
   bottom: calc(92px + env(safe-area-inset-bottom,0));
@@ -671,6 +809,7 @@ body::before {
 @media (max-width: 600px) {
   .card-shell { padding: 22px 16px; border-radius: 22px; }
   .ready-animation-wrap { padding: 8px; border-radius: 22px; }
+  .love-suzu-btn { left: 10px; font-size: 12px; padding: 10px 14px; }
   .memory-book { min-height: 420px; }
   .memory-book-spread {
     min-height: 420px;
