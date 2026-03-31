@@ -61,6 +61,8 @@
     if (!textEl || !dotsEl || !lines?.length) return;
 
     let idx = 0;
+    let intervalId = null;
+    let manualMode = false;
 
     lines.forEach((_, i) => {
       const d = document.createElement('div');
@@ -79,9 +81,31 @@
       }, 400);
     };
 
+    const showText = (text) => {
+      textEl.classList.remove('in');
+      textEl.classList.add('out');
+      setTimeout(() => {
+        textEl.textContent = text;
+        textEl.classList.remove('out');
+        textEl.classList.add('in');
+      }, 220);
+    };
+
+    const stopAuto = () => {
+      manualMode = true;
+      if (intervalId) clearInterval(intervalId);
+      dotsEl.style.opacity = '.3';
+    };
+
     textEl.textContent = lines[0];
     textEl.classList.add('in');
-    setInterval(() => { idx = (idx + 1) % lines.length; show(idx); }, 3200);
+    intervalId = setInterval(() => {
+      if (manualMode) return;
+      idx = (idx + 1) % lines.length;
+      show(idx);
+    }, 3200);
+
+    return { showText, stopAuto };
   };
 
   /* ============================================================
@@ -328,13 +352,74 @@
   /* ============================================================
      9. Smooth Scroll
      ============================================================ */
-  const initScroll = () => {
+  const initDailyMessage = (quoteApi) => {
     const link   = $('#downLink');
-    const target = $('#readySection');
-    if (!link || !target) return;
+    if (!link || !quoteApi) return;
+
+    const messages = [
+      "You are my favorite part of every day.",
+      "No matter how heavy today feels, I am always with you.",
+      "You make my world softer, warmer, and brighter.",
+      "I still smile every time I remember that you chose me.",
+      "If your heart is tired, let mine hold it for a while.",
+      "You are my peace in the middle of everything.",
+      "I love the way your existence makes ordinary days feel special.",
+      "Even on quiet days, my heart is full of you.",
+      "You are the sweetest thing my life has ever known.",
+      "If I could, I would wrap you in comfort every single day.",
+      "You are never alone for as long as I am here.",
+      "My favorite place will always be wherever you are.",
+      "I am so proud of you, even on days you doubt yourself.",
+      "You are more loved than you realize, and more precious than words can say.",
+      "Every little thing about you feels like home to me.",
+      "You are the calm my heart always looks for.",
+      "I hope today is gentle with you, and if it is not, I will be.",
+      "You being in my life still feels like a beautiful miracle.",
+      "I would choose you again in every version of life.",
+      "You make love feel easy, safe, and real.",
+      "You deserve softness, patience, and all the good things.",
+      "I hope you always remember how deeply cherished you are.",
+      "You are my favorite notification, memory, and future thought.",
+      "When you are happy, my heart feels lighter too.",
+      "You are the loveliest chapter of my story.",
+      "If the world feels loud, come rest in my love.",
+      "I love your heart, your smile, your soul, and all your little details.",
+      "There is nothing ordinary about you to me.",
+      "You are the person I thank life for the most.",
+      "My day always gets better the moment I think of you.",
+      "You are my once-in-a-lifetime kind of love.",
+      "No matter what happens today, I am on your side.",
+      "Your existence alone makes the world prettier to me.",
+      "You are my favorite comfort and my favorite excitement.",
+      "I hope you feel my love around you even when I am not near.",
+      "You are the reason my heart learned how to feel safe.",
+      "I love you in all your moods, all your moments, all your versions.",
+      "You are my soft place to land.",
+      "I still get grateful just thinking about us.",
+      "Your smile has a permanent place in my heart.",
+      "I want your days to feel lighter because of my love.",
+      "You are the best thing that ever stayed in my heart.",
+      "Even your silence feels close to me.",
+      "You are my sweetest habit and my favorite feeling.",
+      "Loving you is the easiest truth I know.",
+      "You matter to me in ways I can never fully explain.",
+      "I hope life gives you reasons to smile today, and if not, let me be one.",
+      "You are my sunshine on good days and my shelter on hard ones.",
+      "I adore you more than these words can hold.",
+      "If I could send you one thing right now, it would be my arms around you."
+    ];
+
+    let lastIndex = -1;
+
     link.addEventListener('click', e => {
       e.preventDefault();
-      target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
+      quoteApi.stopAuto();
+      let next = Math.floor(Math.random() * messages.length);
+      if (messages.length > 1) {
+        while (next === lastIndex) next = Math.floor(Math.random() * messages.length);
+      }
+      lastIndex = next;
+      quoteApi.showText(messages[next]);
     });
   };
 
@@ -471,13 +556,13 @@
     const meetDt  = cfg?.meetDateIso || '2025-03-21T06:09:00';
 
     startCounter(meetDt);
-    initQuotes(lines);
+    const quoteApi = initQuotes(lines);
     initParticles();
     initConfetti();
     initBreathing(breath);
     initMemo();
     initMemoryBook();
-    initScroll();
+    initDailyMessage(quoteApi);
     initMoodToy(apiUrl, cplId);
     initReadyAnimation();
     initReadyCard();
