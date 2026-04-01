@@ -575,6 +575,30 @@ body::before {
   box-shadow: 0 0 12px rgba(255,143,171,.45);
 }
 
+.our-app-card {
+  padding-bottom: 28px;
+}
+
+.our-app-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.our-app-frame {
+  width: min(100%, 620px);
+  height: 420px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 24px;
+  background: rgba(255,255,255,.04);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+
+.our-app-link {
+  max-width: 320px;
+}
+
 /* ================================================
    FOOTER
    ================================================ */
@@ -819,6 +843,7 @@ body::before {
   }
   .memory-book-spread::before { display: none; }
   .memory-book-page { min-height: 180px; }
+  .our-app-frame { height: 320px; border-radius: 18px; }
   .mood-toy { right: 10px; bottom: calc(82px + env(safe-area-inset-bottom,0)); padding: 10px 12px; }
   .since    { right: 10px; font-size: 9.5px; padding: 6px 11px; }
   .rocket-emoji { font-size: 16px; }
