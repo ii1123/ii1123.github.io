@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
+const START_URL = "https://ii1123.github.io/our-app/";
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -16,7 +17,7 @@ function createWindow() {
     },
   });
 
-  window.loadFile(path.join(__dirname, "index.html"));
+  window.loadURL(START_URL);
 }
 
 app.whenReady().then(() => {
